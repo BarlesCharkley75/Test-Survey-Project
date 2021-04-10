@@ -33,7 +33,6 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_m_c_question2);
 
 
-
         Intent intent = getIntent();
         info = intent.getIntExtra("info",0);
 
@@ -88,6 +87,24 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
         option4.setText(questionList.get(i).getOption4());
 
         q_count.setText(String.valueOf(i + 1) + "/" + String.valueOf(questionList.size()));
+
+        option1.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
+        option2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
+        option3.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
+        option4.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
+
+        if(questionList.get(current_question).getSelectedAnswer() ==1){
+            option1.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+        }
+        else if(questionList.get(current_question).getSelectedAnswer() ==2){
+            option2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+        }
+        else if(questionList.get(current_question).getSelectedAnswer() ==3){
+            option3.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+        }
+        else if (questionList.get(current_question).getSelectedAnswer() ==4){
+            option4.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+        }
 
 
     }
@@ -147,19 +164,14 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
         if(current_question < questionList.size() - 1){
 
             current_question ++;
-
             setQuestion(current_question);
-
-            option1.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
-            option2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
-            option3.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
-            option4.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
 
         }
 
         else{
             // go to free response activity
             Intent intent = new Intent(MCQuestionActivity2.this, FRQuestionActivity.class);
+            intent.putExtra("info",1);
             startActivity(intent);
         }
     }
@@ -171,18 +183,6 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
 
             setQuestion(current_question);
 
-            if(questionList.get(current_question).getSelectedAnswer() ==1){
-                option1.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
-            }
-            else if(questionList.get(current_question).getSelectedAnswer() ==2){
-                option2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
-            }
-            else if(questionList.get(current_question).getSelectedAnswer() ==3){
-                option3.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
-            }
-            else if (questionList.get(current_question).getSelectedAnswer() ==4){
-                option4.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
-            }
 
 
         }
