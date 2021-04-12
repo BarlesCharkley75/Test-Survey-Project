@@ -6,6 +6,11 @@ import android.os.Bundle;
 import android.widget.GridView;
 import android.widget.ScrollView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+import static com.example.quizapp.MainActivity.testList;
+
 public class TestListActivity extends AppCompatActivity {
 
     private GridView test_list_grid;
@@ -22,7 +27,9 @@ public class TestListActivity extends AppCompatActivity {
         test_list_grid = findViewById(R.id.test_lists_gridview);
 
 
-        TestListAdapter adapter = new TestListAdapter(15);
+
+
+        TestListAdapter adapter = new TestListAdapter(testList);
         test_list_grid.setAdapter(adapter);
 
 

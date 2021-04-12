@@ -1,5 +1,6 @@
 package com.example.quizapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -10,9 +11,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+
+import static com.example.quizapp.MCQuestionActivity2.NumOfTest;
 
 public class FRQuestionActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -29,6 +39,10 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
 
     private int info = 0;
 
+    private FirebaseFirestore firestore;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +51,7 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
 
         Intent intent = getIntent();
         info = intent.getIntExtra("info",0);
+
 
 
         question = findViewById(R.id.question);
@@ -50,6 +65,8 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
         GoNext.setOnClickListener(this);
         GoPrev.setOnClickListener(this);
 
+        firestore = FirebaseFirestore.getInstance();
+
         getQuestionList();
     }
 
@@ -57,10 +74,37 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
     private void getQuestionList(){
         questionList = new ArrayList<FRQuestion>();
 
-        questionList.add(new FRQuestion("who are you?","null"));
-        questionList.add(new FRQuestion("best ice cream brand?","null"));
+//        questionList.add(new FRQuestion("who are you?","null"));
+//        questionList.add(new FRQuestion("best ice cream brand?","null"));
+
+        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("FRQuestions").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            QuerySnapshot questions = task.getResult();
+
+                            for(QueryDocumentSnapshot doc : questions){
+                                questionList.add(new FRQuestion(
+                                        doc.getString("question"),
+                                        doc.getString("UserAnswer")));
+                            }
+
+                            pass();
+//                            Toast.makeText(FRQuestionActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
+
+                        }
+                        else{
+                            Toast.makeText(FRQuestionActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
 
+
+    }
+
+    private void pass(){
         if(info == 1){
             current_question = 0;
             setQuestion(current_question);
@@ -70,6 +114,7 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
             setQuestion(current_question);
         }
     }
+
 
     private void setQuestion(int i){
         question.setText(questionList.get(i).getQuestion());

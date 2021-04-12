@@ -1,5 +1,6 @@
 package com.example.quizapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,8 +10,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.jar.Attributes;
 
 public class MCQuestionActivity2 extends AppCompatActivity implements View.OnClickListener{
 
@@ -25,6 +35,10 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
 
     private int info = 0;
 
+    private FirebaseFirestore firestore;
+
+    public static int NumOfTest;
+
 
 
     @Override
@@ -35,6 +49,8 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
 
         Intent intent = getIntent();
         info = intent.getIntExtra("info",0);
+
+        NumOfTest = intent.getIntExtra("NAME",0) + 1;
 
         question = findViewById(R.id.question);
         q_count = findViewById(R.id.question_num);
@@ -55,17 +71,52 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
         GoNext.setOnClickListener(this);
         GoPrev.setOnClickListener(this);
 
+        firestore = FirebaseFirestore.getInstance();
+
+
         getQuestionList();
     }
 
     private void getQuestionList(){
         questionList = new ArrayList<>();
-        questionList.add(new MCQuestion("Who are you?","A","B","C","D",2, 0));
-        questionList.add(new MCQuestion("Best ice cream brand?","A2","B2","C2","D2",2, 0));
+//        questionList.add(new MCQuestion("Who are you?","A","B","C","D",2, 0));
+//        questionList.add(new MCQuestion("Best ice cream brand?","A2","B2","C2","D2",2, 0));
 
+
+        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("MCQuestions").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            QuerySnapshot questions = task.getResult();
+
+                            for(QueryDocumentSnapshot doc : questions){
+                                questionList.add(new MCQuestion(
+                                        doc.getString("question"),
+                                        doc.getString("option1"),
+                                        doc.getString("option2"),
+                                        doc.getString("option3"),
+                                        doc.getString("option4"),
+                                        Integer.valueOf(doc.getString("CorrectAnswer")),
+                                        Integer.valueOf(doc.getString("SelectedAnswer"))));
+                            }
+                            pass();
+//                            Toast.makeText(MCQuestionActivity2.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
+
+                        }
+                        else{
+                            Toast.makeText(MCQuestionActivity2.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
 
 //        setQuestion(current_question);
+
+
+    }
+
+    private void pass(){
         if(info == 1){
             current_question = 0;
             setQuestion(current_question);
@@ -75,7 +126,6 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
             setQuestion(current_question);
 
         }
-
     }
 
     private void setQuestion(int i){

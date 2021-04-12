@@ -1,5 +1,6 @@
 package com.example.quizapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,8 +10,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+
+import static com.example.quizapp.MCQuestionActivity2.NumOfTest;
 
 public class MatchingQurestionActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -27,6 +37,8 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
 
     private int pair_order = 0;
     private int correct_match;
+
+    private FirebaseFirestore firestore;
 
 
     @Override
@@ -69,6 +81,8 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
         GoPrev.setOnClickListener(this);
         clear.setOnClickListener(this);
 
+        firestore = FirebaseFirestore.getInstance();
+
 
 
         getQuestionList();
@@ -78,13 +92,54 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
     private void getQuestionList(){
         questionList = new ArrayList<MatchingQuestion>();
 
-        questionList.add(new MatchingQuestion("match","A","B","C","D","C","D","A","B",3,4,
-                1,2,0,0,0,0));
+//        questionList.add(new MatchingQuestion("match","A","B","C","D","C","D","A","B",3,4,
+//                1,2,0,0,0,0));
+//
+//        questionList.add(new MatchingQuestion("match","meat","vegetable","fruit","fish","apple","onions","salmon","beef",4,2,
+//                1,3,0,0,0,0)); //random order example
 
-        questionList.add(new MatchingQuestion("match","meat","vegetable","fruit","fish","apple","onions","salmon","beef",4,2,
-                1,3,0,0,0,0)); //random order example
+        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("MatchingQuestions").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            QuerySnapshot questions = task.getResult();
+
+                            for(QueryDocumentSnapshot doc : questions){
+                                questionList.add(new MatchingQuestion(
+                                        doc.getString("question"),
+                                        doc.getString("optionL1"),
+                                        doc.getString("optionL2"),
+                                        doc.getString("optionL3"),
+                                        doc.getString("optionL4"),
+                                        doc.getString("optionR1"),
+                                        doc.getString("optionR2"),
+                                        doc.getString("optionR3"),
+                                        doc.getString("optionR4"),
+                                        Integer.valueOf(doc.getString("L1_Answer")),
+                                        Integer.valueOf(doc.getString("L2_Answer")),
+                                        Integer.valueOf(doc.getString("L3_Answer")),
+                                        Integer.valueOf(doc.getString("L4_Answer")),
+                                        Integer.valueOf(doc.getString("L1_selected")),
+                                        Integer.valueOf(doc.getString("L2_selected")),
+                                        Integer.valueOf(doc.getString("L3_selected")),
+                                        Integer.valueOf(doc.getString("L4_selected"))));
+                            }
+
+                            pass();
+//                            Toast.makeText(FRQuestionActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
+
+                        }
+                        else{
+                            Toast.makeText(MatchingQurestionActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
 
+    }
+
+    private void pass(){
         if(info == 1){
             current_question = 0;
             setQuestion(current_question);

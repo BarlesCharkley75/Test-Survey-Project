@@ -7,22 +7,26 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class TestListAdapter extends BaseAdapter {
 
-    private int num_of_tests;
+    private ArrayList<String> testList;
 
 
 
 
 
-    public TestListAdapter(int num_of_tests) {
-        this.num_of_tests = num_of_tests;
+    public TestListAdapter(ArrayList<String> testList) {
+
+        this.testList = testList;
     }
 
 
     @Override
     public int getCount() {
-        return num_of_tests;
+        return testList.size() ;
     }
 
     @Override
@@ -51,13 +55,14 @@ public class TestListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent( parent.getContext(), MCQuestionActivity2.class);
                 intent.putExtra("info",1);
+                intent.putExtra("NAME", position );
                 parent.getContext().startActivity(intent);
 
 
             }
         });
 
-        ((TextView)view.findViewById(R.id.list_num_textview)).setText("Test " + String.valueOf(position + 1));
+        ((TextView)view.findViewById(R.id.list_num_textview)).setText(testList.get(position));
 
         return view;
     }

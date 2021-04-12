@@ -1,5 +1,6 @@
 package com.example.quizapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -10,8 +11,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+
+import static com.example.quizapp.MCQuestionActivity2.NumOfTest;
 
 public class RankingQuestionActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -25,6 +35,8 @@ public class RankingQuestionActivity extends AppCompatActivity implements View.O
 
     private int current_question;
     private int info = 0;
+
+    private FirebaseFirestore firestore;
 
 
     @Override
@@ -56,18 +68,58 @@ public class RankingQuestionActivity extends AppCompatActivity implements View.O
         GoNext.setOnClickListener(this);
         GoPrev.setOnClickListener(this);
 
+        firestore = FirebaseFirestore.getInstance();
+
         getQuestionList();
     }
 
     private void getQuestionList(){
         questionList = new ArrayList<RankingQuestion>();
 
-        questionList.add(new RankingQuestion("biggest to smallest", "football","basketball","tennis ball","ping pong ball",
-                "null","null","null","null","2","1","3","4"));
+//        questionList.add(new RankingQuestion("biggest to smallest", "football","basketball","tennis ball","ping pong ball",
+//                "null","null","null","null","2","1","3","4"));
+//
+//        questionList.add(new RankingQuestion("Most NBA championship", "Bill Russell","Michael Jordan","LeBron James","Kobe Bryant",
+//                "null","null","null","null","1","2","4","3"));
 
-        questionList.add(new RankingQuestion("Most NBA championship", "Bill Russell","Michael Jordan","LeBron James","Kobe Bryant",
-                "null","null","null","null","1","2","4","3"));
+        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("RankingQuestions").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            QuerySnapshot questions = task.getResult();
 
+                            for(QueryDocumentSnapshot doc : questions){
+                                questionList.add(new RankingQuestion(
+                                        doc.getString("question"),
+                                        doc.getString("option1"),
+                                        doc.getString("option2"),
+                                        doc.getString("option3"),
+                                        doc.getString("option4"),
+                                        doc.getString("user_input1"),
+                                        doc.getString("user_input2"),
+                                        doc.getString("user_input3"),
+                                        doc.getString("user_input4"),
+                                        doc.getString("Answer1"),
+                                        doc.getString("Answer2"),
+                                        doc.getString("Answer3"),
+                                        doc.getString("Answer4")));
+                            }
+
+                            pass();
+//                            Toast.makeText(FRQuestionActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
+
+                        }
+                        else{
+                            Toast.makeText(RankingQuestionActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+
+    }
+
+    private void pass(){
         if(info == 1){
             current_question = 0;
             setQuestion(current_question);
