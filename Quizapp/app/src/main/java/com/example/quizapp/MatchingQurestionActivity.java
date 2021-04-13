@@ -7,18 +7,21 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.ArrayMap;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static com.example.quizapp.MCQuestionActivity2.NumOfTest;
 
@@ -98,43 +101,85 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
 //        questionList.add(new MatchingQuestion("match","meat","vegetable","fruit","fish","apple","onions","salmon","beef",4,2,
 //                1,3,0,0,0,0)); //random order example
 
-        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("MatchingQuestions").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            QuerySnapshot questions = task.getResult();
+//        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("MatchingQuestions").get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if(task.isSuccessful()){
+//                            QuerySnapshot questions = task.getResult();
+//
+//                            for(QueryDocumentSnapshot doc : questions){
+//                                questionList.add(new MatchingQuestion(
+//                                        doc.getString("question"),
+//                                        doc.getString("optionL1"),
+//                                        doc.getString("optionL2"),
+//                                        doc.getString("optionL3"),
+//                                        doc.getString("optionL4"),
+//                                        doc.getString("optionR1"),
+//                                        doc.getString("optionR2"),
+//                                        doc.getString("optionR3"),
+//                                        doc.getString("optionR4"),
+//                                        Integer.valueOf(doc.getString("L1_Answer")),
+//                                        Integer.valueOf(doc.getString("L2_Answer")),
+//                                        Integer.valueOf(doc.getString("L3_Answer")),
+//                                        Integer.valueOf(doc.getString("L4_Answer")),
+//                                        Integer.valueOf(doc.getString("L1_selected")),
+//                                        Integer.valueOf(doc.getString("L2_selected")),
+//                                        Integer.valueOf(doc.getString("L3_selected")),
+//                                        Integer.valueOf(doc.getString("L4_selected"))));
+//                            }
+//
+//                            pass();
+////                            Toast.makeText(FRQuestionActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
+//
+//                        }
+//                        else{
+//                            Toast.makeText(MatchingQurestionActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
 
-                            for(QueryDocumentSnapshot doc : questions){
-                                questionList.add(new MatchingQuestion(
-                                        doc.getString("question"),
-                                        doc.getString("optionL1"),
-                                        doc.getString("optionL2"),
-                                        doc.getString("optionL3"),
-                                        doc.getString("optionL4"),
-                                        doc.getString("optionR1"),
-                                        doc.getString("optionR2"),
-                                        doc.getString("optionR3"),
-                                        doc.getString("optionR4"),
-                                        Integer.valueOf(doc.getString("L1_Answer")),
-                                        Integer.valueOf(doc.getString("L2_Answer")),
-                                        Integer.valueOf(doc.getString("L3_Answer")),
-                                        Integer.valueOf(doc.getString("L4_Answer")),
-                                        Integer.valueOf(doc.getString("L1_selected")),
-                                        Integer.valueOf(doc.getString("L2_selected")),
-                                        Integer.valueOf(doc.getString("L3_selected")),
-                                        Integer.valueOf(doc.getString("L4_selected"))));
-                            }
+        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("MatchingQuestions")
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                Map<String, QueryDocumentSnapshot> docList = new ArrayMap<>();
 
-                            pass();
-//                            Toast.makeText(FRQuestionActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
+                for(QueryDocumentSnapshot doc : queryDocumentSnapshots){
+                    docList.put(doc.getId(),doc);
+                }
+                QueryDocumentSnapshot quesListDoc = docList.get("questionList");
+                String count = quesListDoc.getString("count");
 
-                        }
-                        else{
-                            Toast.makeText(MatchingQurestionActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                for(int i = 1 ; i<= Integer.valueOf(count); i++){
+//                    String quesName = "question" + String.valueOf(i);
+
+                    QueryDocumentSnapshot quesDoc = docList.get("question" + String.valueOf(i));
+
+                    questionList.add(new MatchingQuestion(
+                            quesDoc.getString("question"),
+                            quesDoc.getString("optionL1"),
+                            quesDoc.getString("optionL2"),
+                            quesDoc.getString("optionL3"),
+                            quesDoc.getString("optionL4"),
+                            quesDoc.getString("optionR1"),
+                            quesDoc.getString("optionR2"),
+                            quesDoc.getString("optionR3"),
+                            quesDoc.getString("optionR4"),
+                            Integer.valueOf(quesDoc.getString("L1_Answer")),
+                            Integer.valueOf(quesDoc.getString("L2_Answer")),
+                            Integer.valueOf(quesDoc.getString("L3_Answer")),
+                            Integer.valueOf(quesDoc.getString("L4_Answer")),
+                            Integer.valueOf(quesDoc.getString("L1_selected")),
+                            Integer.valueOf(quesDoc.getString("L2_selected")),
+                            Integer.valueOf(quesDoc.getString("L3_selected")),
+                            Integer.valueOf(quesDoc.getString("L4_selected"))));
+                }
+
+                pass();
+
+            }
+        });
 
 
     }

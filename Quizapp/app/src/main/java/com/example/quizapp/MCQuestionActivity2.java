@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.ArrayMap;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,6 +22,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.jar.Attributes;
 
 public class MCQuestionActivity2 extends AppCompatActivity implements View.OnClickListener{
@@ -38,6 +41,8 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
     private FirebaseFirestore firestore;
 
     public static int NumOfTest;
+
+    private int questions_needed = 0;
 
 
 
@@ -71,6 +76,8 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
         GoNext.setOnClickListener(this);
         GoPrev.setOnClickListener(this);
 
+        questionList = new ArrayList<>();
+
         firestore = FirebaseFirestore.getInstance();
 
 
@@ -78,43 +85,81 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
     }
 
     private void getQuestionList(){
-        questionList = new ArrayList<>();
+        questionList.clear();
 //        questionList.add(new MCQuestion("Who are you?","A","B","C","D",2, 0));
 //        questionList.add(new MCQuestion("Best ice cream brand?","A2","B2","C2","D2",2, 0));
 
+//        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("MCQuestions").get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if(task.isSuccessful()){
+//                            QuerySnapshot questions = task.getResult();
+//
+//                            for(QueryDocumentSnapshot doc : questions){
+//                                questionList.add(new MCQuestion(
+//                                        doc.getString("question"),
+//                                        doc.getString("option1"),
+//                                        doc.getString("option2"),
+//                                        doc.getString("option3"),
+//                                        doc.getString("option4"),
+//                                        Integer.valueOf("CorrectAnswer"),
+//                                        Integer.valueOf("SelectedAnswer")));
+//                            }
+//
+//                            pass();
+////                            Toast.makeText(FRQuestionActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
+//
+//                        }
+//                        else{
+//                            Toast.makeText(MCQuestionActivity2.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
 
-        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("MCQuestions").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            QuerySnapshot questions = task.getResult();
+        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("MCQuestions")
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                Map<String, QueryDocumentSnapshot> docList = new ArrayMap<>();
 
-                            for(QueryDocumentSnapshot doc : questions){
-                                questionList.add(new MCQuestion(
-                                        doc.getString("question"),
-                                        doc.getString("option1"),
-                                        doc.getString("option2"),
-                                        doc.getString("option3"),
-                                        doc.getString("option4"),
-                                        Integer.valueOf(doc.getString("CorrectAnswer")),
-                                        Integer.valueOf(doc.getString("SelectedAnswer"))));
-                            }
-                            pass();
-//                            Toast.makeText(MCQuestionActivity2.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
+                for(QueryDocumentSnapshot doc : queryDocumentSnapshots){
+                    docList.put(doc.getId(),doc);
+                }
+                QueryDocumentSnapshot quesListDoc = docList.get("questionList");
+                String count = quesListDoc.getString("count");
 
-                        }
-                        else{
-                            Toast.makeText(MCQuestionActivity2.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                for(int i = 1 ; i<= Integer.valueOf(count); i++){
+//                    String quesName = "question" + String.valueOf(i);
+
+                    QueryDocumentSnapshot quesDoc = docList.get("question" + String.valueOf(i));
+
+                    questionList.add(new MCQuestion(quesDoc.getString("question"),
+                            quesDoc.getString("option1"),
+                            quesDoc.getString("option2"),
+                            quesDoc.getString("option3"),
+                            quesDoc.getString("option4"),
+                            Integer.valueOf(quesDoc.getString("CorrectAnswer")),
+                            Integer.valueOf(quesDoc.getString("SelectedAnswer"))));
+                }
+
+                pass();
+
+            }
+        });
+
+
+
+
+
+
+        }
 
 
 //        setQuestion(current_question);
 
 
-    }
+
 
     private void pass(){
         if(info == 1){

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.ArrayMap;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,12 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static com.example.quizapp.MCQuestionActivity2.NumOfTest;
 
@@ -82,39 +85,79 @@ public class RankingQuestionActivity extends AppCompatActivity implements View.O
 //        questionList.add(new RankingQuestion("Most NBA championship", "Bill Russell","Michael Jordan","LeBron James","Kobe Bryant",
 //                "null","null","null","null","1","2","4","3"));
 
-        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("RankingQuestions").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            QuerySnapshot questions = task.getResult();
+//        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("RankingQuestions").get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if(task.isSuccessful()){
+//                            QuerySnapshot questions = task.getResult();
+//
+//                            for(QueryDocumentSnapshot doc : questions){
+//                                questionList.add(new RankingQuestion(
+//                                        doc.getString("question"),
+//                                        doc.getString("option1"),
+//                                        doc.getString("option2"),
+//                                        doc.getString("option3"),
+//                                        doc.getString("option4"),
+//                                        doc.getString("user_input1"),
+//                                        doc.getString("user_input2"),
+//                                        doc.getString("user_input3"),
+//                                        doc.getString("user_input4"),
+//                                        doc.getString("Answer1"),
+//                                        doc.getString("Answer2"),
+//                                        doc.getString("Answer3"),
+//                                        doc.getString("Answer4")));
+//                            }
+//
+//                            pass();
+////                            Toast.makeText(FRQuestionActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
+//
+//                        }
+//                        else{
+//                            Toast.makeText(RankingQuestionActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
 
-                            for(QueryDocumentSnapshot doc : questions){
-                                questionList.add(new RankingQuestion(
-                                        doc.getString("question"),
-                                        doc.getString("option1"),
-                                        doc.getString("option2"),
-                                        doc.getString("option3"),
-                                        doc.getString("option4"),
-                                        doc.getString("user_input1"),
-                                        doc.getString("user_input2"),
-                                        doc.getString("user_input3"),
-                                        doc.getString("user_input4"),
-                                        doc.getString("Answer1"),
-                                        doc.getString("Answer2"),
-                                        doc.getString("Answer3"),
-                                        doc.getString("Answer4")));
-                            }
+        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("RankingQuestions")
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                Map<String, QueryDocumentSnapshot> docList = new ArrayMap<>();
 
-                            pass();
-//                            Toast.makeText(FRQuestionActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
+                for(QueryDocumentSnapshot doc : queryDocumentSnapshots){
+                    docList.put(doc.getId(),doc);
+                }
+                QueryDocumentSnapshot quesListDoc = docList.get("questionList");
+                String count = quesListDoc.getString("count");
 
-                        }
-                        else{
-                            Toast.makeText(RankingQuestionActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                for(int i = 1 ; i<= Integer.valueOf(count); i++){
+//                    String quesName = "question" + String.valueOf(i);
+
+                    QueryDocumentSnapshot quesDoc = docList.get("question" + String.valueOf(i));
+
+                    questionList.add(new RankingQuestion(
+                            quesDoc.getString("question"),
+                            quesDoc.getString("option1"),
+                            quesDoc.getString("option2"),
+                            quesDoc.getString("option3"),
+                            quesDoc.getString("option4"),
+                            quesDoc.getString("user_input1"),
+                            quesDoc.getString("user_input2"),
+                            quesDoc.getString("user_input3"),
+                            quesDoc.getString("user_input4"),
+                            quesDoc.getString("Answer1"),
+                            quesDoc.getString("Answer2"),
+                            quesDoc.getString("Answer3"),
+                            quesDoc.getString("Answer4")));
+                }
+
+                pass();
+
+            }
+        });
+
+
 
 
     }

@@ -19,7 +19,7 @@ public class CategoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_category);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Select Type");
+        getSupportActionBar().setTitle("Taker: Select Type");
 
         button_test = findViewById(R.id.button_test);
         button_test.setOnClickListener(new View.OnClickListener() {

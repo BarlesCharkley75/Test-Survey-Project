@@ -22,8 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Button start;//define buttons first
 
+//    public static ArrayList<String> testList = new ArrayList<>();
     public static ArrayList<String> testList = new ArrayList<>();
-
 
 
     private FirebaseFirestore firestore;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//this function helps us click a button and go to next page
-                Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
+                Intent intent = new Intent(MainActivity.this, UserTypeActivity.class);
                 startActivity(intent);
             }
         });
@@ -62,9 +62,14 @@ public class MainActivity extends AppCompatActivity {
                         long count = (long)doc.get("count");
 
                         for(int i = 1; i <= count; i ++){
-                            String testName = doc.getString("test" + String.valueOf(i));
+                            String testName = doc.getString("test" + String.valueOf(i)+"_name");
 
                             testList.add(testName);
+
+//                            String testName = doc.getString("test"+String.valueOf(i)+"_name");
+//                            String testID = doc.getString("test"+String.valueOf(i)+"_ID");
+//
+//                            testList.add( new TestModel(testID,testName,"0"));
                         }
                         Toast.makeText(MainActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
                     }

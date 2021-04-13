@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.ArrayMap;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -21,6 +23,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Map;
 
 import static com.example.quizapp.MCQuestionActivity2.NumOfTest;
 
@@ -77,28 +80,54 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
 //        questionList.add(new FRQuestion("who are you?","null"));
 //        questionList.add(new FRQuestion("best ice cream brand?","null"));
 
-        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("FRQuestions").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            QuerySnapshot questions = task.getResult();
+//        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("FRQuestions").get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if(task.isSuccessful()){
+//                            QuerySnapshot questions = task.getResult();
+//
+//                            for(QueryDocumentSnapshot doc : questions){
+//                                questionList.add(new FRQuestion(
+//                                        doc.getString("question"),
+//                                        doc.getString("UserAnswer")));
+//                            }
+//
+//                            pass();
+////                            Toast.makeText(FRQuestionActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
+//
+//                        }
+//                        else{
+//                            Toast.makeText(FRQuestionActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
 
-                            for(QueryDocumentSnapshot doc : questions){
-                                questionList.add(new FRQuestion(
-                                        doc.getString("question"),
-                                        doc.getString("UserAnswer")));
-                            }
+        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("FRQuestions")
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                Map<String, QueryDocumentSnapshot> docList = new ArrayMap<>();
 
-                            pass();
-//                            Toast.makeText(FRQuestionActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
+                for(QueryDocumentSnapshot doc : queryDocumentSnapshots){
+                    docList.put(doc.getId(),doc);
+                }
+                QueryDocumentSnapshot quesListDoc = docList.get("questionList");
+                String count = quesListDoc.getString("count");
 
-                        }
-                        else{
-                            Toast.makeText(FRQuestionActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                for(int i = 1 ; i<= Integer.valueOf(count); i++){
+//                    String quesName = "question" + String.valueOf(i);
+
+                    QueryDocumentSnapshot quesDoc = docList.get("question" + String.valueOf(i));
+
+                    questionList.add(new FRQuestion(quesDoc.getString("question"),
+                            quesDoc.getString("UserAnswer")));
+                }
+
+                pass();
+
+            }
+        });
 
 
 
