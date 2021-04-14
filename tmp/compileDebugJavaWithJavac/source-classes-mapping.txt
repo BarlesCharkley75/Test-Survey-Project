@@ -1,0 +1,7 @@
+com/example/testapplication/SplashActivity.java
+ com.example.testapplication.SplashActivity
+ com.example.testapplication.SplashActivity$1
+com/example/testapplication/MainActivity.java
+ com.example.testapplication.MainActivity
+com/example/testapplication/BuildConfig.java
+ com.example.testapplication.BuildConfig
