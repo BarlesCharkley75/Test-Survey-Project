@@ -25,7 +25,7 @@ import static com.example.quizapp.MainActivity.testList;
 public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
 
     private EditText question;
-    private TextInputLayout option1, option2, option3, option4;
+    private TextInputLayout option1, option2, option3, option4, Answer;
 
     private Button finish;
 
@@ -44,6 +44,7 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
         option2 = findViewById(R.id.option2);
         option3 = findViewById(R.id.option3);
         option4 = findViewById(R.id.option4);
+        Answer = findViewById(R.id.Answer);
 
         finish = findViewById(R.id.finish);
 
@@ -77,7 +78,7 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
                 questionData.put("option2",option2.getEditText().getText().toString());
                 questionData.put("option3",option3.getEditText().getText().toString());
                 questionData.put("option4",option4.getEditText().getText().toString());
-                questionData.put("CorrectAnswer","0");
+                questionData.put("CorrectAnswer",Answer.getEditText().getText().toString());
                 questionData.put("SelectedAnswer","0");
 
 

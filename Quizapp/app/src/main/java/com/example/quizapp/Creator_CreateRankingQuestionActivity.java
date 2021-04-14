@@ -27,6 +27,7 @@ public class Creator_CreateRankingQuestionActivity extends AppCompatActivity {
 
     private EditText question;
     private TextInputLayout option1, option2, option3, option4;
+    private TextInputLayout Answer1, Answer2, Answer3, Answer4;
     private Button finish;
 
     private int count = 0;
@@ -45,6 +46,11 @@ public class Creator_CreateRankingQuestionActivity extends AppCompatActivity {
         option2 = findViewById(R.id.option2);
         option3 = findViewById(R.id.option3);
         option4 = findViewById(R.id.option4);
+
+        Answer1 = findViewById(R.id.Answer1);
+        Answer2 = findViewById(R.id.Answer2);
+        Answer3 = findViewById(R.id.Answer3);
+        Answer4 = findViewById(R.id.Answer4);
 
         finish = findViewById(R.id.finish);
 
@@ -76,10 +82,10 @@ public class Creator_CreateRankingQuestionActivity extends AppCompatActivity {
                 questionData.put("option3",option3.getEditText().getText().toString());
                 questionData.put("option4",option4.getEditText().getText().toString());
 
-                questionData.put("Answer1", "0");
-                questionData.put("Answer2", "0");
-                questionData.put("Answer3", "0");
-                questionData.put("Answer4", "0");
+                questionData.put("Answer1", Answer1.getEditText().getText().toString());
+                questionData.put("Answer2", Answer2.getEditText().getText().toString());
+                questionData.put("Answer3", Answer3.getEditText().getText().toString());
+                questionData.put("Answer4", Answer4.getEditText().getText().toString());
 
                 questionData.put("user_input1", "null");
                 questionData.put("user_input2", "null");

@@ -28,6 +28,7 @@
             android:scrollbars="vertical"
             android:textSize="20dp">
 
+
         </EditText>
 
         <Button

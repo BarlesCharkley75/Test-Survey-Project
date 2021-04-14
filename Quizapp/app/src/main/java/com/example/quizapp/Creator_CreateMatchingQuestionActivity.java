@@ -31,6 +31,8 @@ public class Creator_CreateMatchingQuestionActivity extends AppCompatActivity {
 
     private TextInputLayout optionR1, optionR2, optionR3, optionR4;
 
+    private TextInputLayout AnswerL1, AnswerL2, AnswerL3, AnswerL4;
+
     private Button finish;
 
     private int count = 0;
@@ -53,6 +55,11 @@ public class Creator_CreateMatchingQuestionActivity extends AppCompatActivity {
         optionR2 = findViewById(R.id.optionR2);
         optionR3 = findViewById(R.id.optionR3);
         optionR4 = findViewById(R.id.optionR4);
+
+        AnswerL1 = findViewById(R.id.AnswerL1);
+        AnswerL2 = findViewById(R.id.AnswerL2);
+        AnswerL3 = findViewById(R.id.AnswerL3);
+        AnswerL4 = findViewById(R.id.AnswerL4);
 
 
         finish = findViewById(R.id.finish);
@@ -89,10 +96,10 @@ public class Creator_CreateMatchingQuestionActivity extends AppCompatActivity {
                 questionData.put("optionR3",optionR3.getEditText().getText().toString());
                 questionData.put("optionR4",optionR4.getEditText().getText().toString());
 
-                questionData.put("L1_Answer","0");
-                questionData.put("L2_Answer","0");
-                questionData.put("L3_Answer","0");
-                questionData.put("L4_Answer","0");
+                questionData.put("L1_Answer",AnswerL1.getEditText().getText().toString());
+                questionData.put("L2_Answer",AnswerL2.getEditText().getText().toString());
+                questionData.put("L3_Answer",AnswerL3.getEditText().getText().toString());
+                questionData.put("L4_Answer",AnswerL4.getEditText().getText().toString());
 
                 questionData.put("L1_selected","0");
                 questionData.put("L2_selected","0");
