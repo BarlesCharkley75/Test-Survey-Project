@@ -27,6 +27,7 @@ import java.util.Map;
 
 import static com.example.quizapp.MCQuestionActivity2.NumOfTest;
 
+
 public class FRQuestionActivity extends AppCompatActivity implements View.OnClickListener{
 
     private TextView question;
@@ -77,32 +78,6 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
     private void getQuestionList(){
         questionList = new ArrayList<FRQuestion>();
 
-//        questionList.add(new FRQuestion("who are you?","null"));
-//        questionList.add(new FRQuestion("best ice cream brand?","null"));
-
-//        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("FRQuestions").get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if(task.isSuccessful()){
-//                            QuerySnapshot questions = task.getResult();
-//
-//                            for(QueryDocumentSnapshot doc : questions){
-//                                questionList.add(new FRQuestion(
-//                                        doc.getString("question"),
-//                                        doc.getString("UserAnswer")));
-//                            }
-//
-//                            pass();
-////                            Toast.makeText(FRQuestionActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
-//
-//                        }
-//                        else{
-//                            Toast.makeText(FRQuestionActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
-
         firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("FRQuestions")
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -132,6 +107,7 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
 
 
     }
+
 
     private void pass(){
         if(info == 1){

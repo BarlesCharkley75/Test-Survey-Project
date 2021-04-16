@@ -41,8 +41,6 @@ public class UserTypeActivity extends AppCompatActivity {
         });
 
 
-
-
     }
 
 

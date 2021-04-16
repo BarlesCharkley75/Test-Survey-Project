@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.jar.Attributes;
 
+//MC Questions is used as a base reference for all types of questions.
+
 public class MCQuestionActivity2 extends AppCompatActivity implements View.OnClickListener{
 
     private TextView question;
@@ -86,36 +88,6 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
 
     private void getQuestionList(){
         questionList.clear();
-//        questionList.add(new MCQuestion("Who are you?","A","B","C","D",2, 0));
-//        questionList.add(new MCQuestion("Best ice cream brand?","A2","B2","C2","D2",2, 0));
-
-//        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("MCQuestions").get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if(task.isSuccessful()){
-//                            QuerySnapshot questions = task.getResult();
-//
-//                            for(QueryDocumentSnapshot doc : questions){
-//                                questionList.add(new MCQuestion(
-//                                        doc.getString("question"),
-//                                        doc.getString("option1"),
-//                                        doc.getString("option2"),
-//                                        doc.getString("option3"),
-//                                        doc.getString("option4"),
-//                                        Integer.valueOf("CorrectAnswer"),
-//                                        Integer.valueOf("SelectedAnswer")));
-//                            }
-//
-//                            pass();
-////                            Toast.makeText(FRQuestionActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
-//
-//                        }
-//                        else{
-//                            Toast.makeText(MCQuestionActivity2.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
 
         firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("MCQuestions")
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -148,18 +120,10 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
             }
         });
 
+    }
 
-
-
-
-
-        }
-
-
-//        setQuestion(current_question);
-
-
-
+    //If info == 1, that means the question is passed from the front, so set the questions from the beginning.
+    //If info == 2, that means the question is passed from the back (user clicked "GoPrev"), so set the questions from the end.
 
     private void pass(){
         if(info == 1){
@@ -172,6 +136,9 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
 
         }
     }
+
+    //At the beginning, set up all the options with light grey color, but if user has already selected a answer, remember that answer
+    // and set it to green.
 
     private void setQuestion(int i){
         question.setText(questionList.get(i).getQuestion());
@@ -204,10 +171,9 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
 
     }
 
+    //Change the color of the clicked option
     @Override
     public void onClick(View v) {
-
-
 
         if (v.getId() == R.id.option1){
             questionList.get(current_question).setSelectedAnswer(1);
@@ -277,8 +243,6 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
             current_question --;
 
             setQuestion(current_question);
-
-
 
         }
     }

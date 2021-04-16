@@ -37,7 +37,7 @@ public class Creator_TestListActivity extends AppCompatActivity {
 
         creator_test_list_gridview = findViewById(R.id.creator_test_lists_gridview);
 
-
+        //Refer to TestListActivity to see how to set up the grid view adapter.
         Creator_TestListAdapter adapter = new Creator_TestListAdapter(testList);
         creator_test_list_gridview.setAdapter(adapter);
 
@@ -47,6 +47,7 @@ public class Creator_TestListActivity extends AppCompatActivity {
         AddNewTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 addNewTest();
             }
         });
@@ -60,8 +61,8 @@ public class Creator_TestListActivity extends AppCompatActivity {
         testData.put("name", "test" + String.valueOf(testList.size() + 1));
         testData.put("NumOfQuestions", 0);
 
-//        String doc_id = firestore.collection("tests").document().getId();
 
+//      update the database to add a new test.
         String doc_id = "test" + String.valueOf(testList.size()+1);
 
         firestore.collection("tests").document(doc_id)
@@ -72,7 +73,6 @@ public class Creator_TestListActivity extends AppCompatActivity {
                 Map<String , Object> testDoc = new ArrayMap<>();
 
                 testDoc.put("test" + String.valueOf(testList.size() + 1)+"_name", "test" + String.valueOf(testList.size() + 1));
-//                testDoc.put("test" + String.valueOf(testList.size() + 1)+"_id", doc_id);
                 testDoc.put("count", testList.size() + 1);
 
                 firestore.collection("tests").document("testList")
@@ -104,7 +104,7 @@ public class Creator_TestListActivity extends AppCompatActivity {
         Map<String, Object> questionSetData = new ArrayMap<>();
         questionSetData.put("count","0");
 
-//        String ques_id = "questionList";
+
 
 //        Add MCQuestions
 

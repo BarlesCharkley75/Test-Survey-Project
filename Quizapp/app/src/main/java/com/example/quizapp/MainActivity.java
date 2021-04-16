@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
 
     private Button start;//define buttons first
 
-//    public static ArrayList<String> testList = new ArrayList<>();
     public static ArrayList<String> testList = new ArrayList<>();
 
 
@@ -33,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //connect to the interface
         start = findViewById(R.id.StartButton);
-
         firestore = FirebaseFirestore.getInstance();
 
         loadData();
@@ -50,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //Firebase stuff, trying to get data from firestore.
     private void loadData(){
         testList.clear();
         firestore.collection("tests").document("testList").
@@ -66,10 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
                             testList.add(testName);
 
-//                            String testName = doc.getString("test"+String.valueOf(i)+"_name");
-//                            String testID = doc.getString("test"+String.valueOf(i)+"_ID");
-//
-//                            testList.add( new TestModel(testID,testName,"0"));
                         }
                         Toast.makeText(MainActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
                     }

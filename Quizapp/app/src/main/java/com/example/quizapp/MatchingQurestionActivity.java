@@ -95,49 +95,6 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
     private void getQuestionList(){
         questionList = new ArrayList<MatchingQuestion>();
 
-//        questionList.add(new MatchingQuestion("match","A","B","C","D","C","D","A","B",3,4,
-//                1,2,0,0,0,0));
-//
-//        questionList.add(new MatchingQuestion("match","meat","vegetable","fruit","fish","apple","onions","salmon","beef",4,2,
-//                1,3,0,0,0,0)); //random order example
-
-//        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("MatchingQuestions").get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if(task.isSuccessful()){
-//                            QuerySnapshot questions = task.getResult();
-//
-//                            for(QueryDocumentSnapshot doc : questions){
-//                                questionList.add(new MatchingQuestion(
-//                                        doc.getString("question"),
-//                                        doc.getString("optionL1"),
-//                                        doc.getString("optionL2"),
-//                                        doc.getString("optionL3"),
-//                                        doc.getString("optionL4"),
-//                                        doc.getString("optionR1"),
-//                                        doc.getString("optionR2"),
-//                                        doc.getString("optionR3"),
-//                                        doc.getString("optionR4"),
-//                                        Integer.valueOf(doc.getString("L1_Answer")),
-//                                        Integer.valueOf(doc.getString("L2_Answer")),
-//                                        Integer.valueOf(doc.getString("L3_Answer")),
-//                                        Integer.valueOf(doc.getString("L4_Answer")),
-//                                        Integer.valueOf(doc.getString("L1_selected")),
-//                                        Integer.valueOf(doc.getString("L2_selected")),
-//                                        Integer.valueOf(doc.getString("L3_selected")),
-//                                        Integer.valueOf(doc.getString("L4_selected"))));
-//                            }
-//
-//                            pass();
-////                            Toast.makeText(FRQuestionActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
-//
-//                        }
-//                        else{
-//                            Toast.makeText(MatchingQurestionActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
 
         firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("MatchingQuestions")
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -286,6 +243,8 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
 
     }
 
+    //This is the most complicated part about the matching questions. The idea is, each pair order represent a pair
+    //options in the same pair order will have the same color. Other than that, just set up refer to MC questions.
 
     @Override
     public void onClick(View v) {

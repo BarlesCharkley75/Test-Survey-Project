@@ -28,7 +28,7 @@ public class SubmissionActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         if(v.getId() == R.id.submission){
             Intent intent = new Intent(SubmissionActivity.this, CategoryActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); //This will cancel all the opened activities.
             startActivity(intent);
         }
 

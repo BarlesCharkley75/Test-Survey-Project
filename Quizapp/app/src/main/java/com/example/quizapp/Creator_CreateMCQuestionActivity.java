@@ -50,6 +50,9 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
 
         firestore = FirebaseFirestore.getInstance();
 
+
+        //get number of questions we already have
+
         firestore.collection("tests").document("test"+String.valueOf(testList.size() + 1))
                 .collection("MCQuestions").document("questionList").get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -66,7 +69,7 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
 
 
 
-
+        // on click, set a new question in a file, and then upload.
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

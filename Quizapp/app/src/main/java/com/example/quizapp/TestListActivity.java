@@ -24,10 +24,8 @@ public class TestListActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("List of Tests");
 
 
+        //use grid view adapter to display sets of tests.
         test_list_grid = findViewById(R.id.test_lists_gridview);
-
-
-
 
         TestListAdapter adapter = new TestListAdapter(testList);
         test_list_grid.setAdapter(adapter);

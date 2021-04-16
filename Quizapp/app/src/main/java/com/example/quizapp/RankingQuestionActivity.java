@@ -79,46 +79,6 @@ public class RankingQuestionActivity extends AppCompatActivity implements View.O
     private void getQuestionList(){
         questionList = new ArrayList<RankingQuestion>();
 
-//        questionList.add(new RankingQuestion("biggest to smallest", "football","basketball","tennis ball","ping pong ball",
-//                "null","null","null","null","2","1","3","4"));
-//
-//        questionList.add(new RankingQuestion("Most NBA championship", "Bill Russell","Michael Jordan","LeBron James","Kobe Bryant",
-//                "null","null","null","null","1","2","4","3"));
-
-//        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("RankingQuestions").get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if(task.isSuccessful()){
-//                            QuerySnapshot questions = task.getResult();
-//
-//                            for(QueryDocumentSnapshot doc : questions){
-//                                questionList.add(new RankingQuestion(
-//                                        doc.getString("question"),
-//                                        doc.getString("option1"),
-//                                        doc.getString("option2"),
-//                                        doc.getString("option3"),
-//                                        doc.getString("option4"),
-//                                        doc.getString("user_input1"),
-//                                        doc.getString("user_input2"),
-//                                        doc.getString("user_input3"),
-//                                        doc.getString("user_input4"),
-//                                        doc.getString("Answer1"),
-//                                        doc.getString("Answer2"),
-//                                        doc.getString("Answer3"),
-//                                        doc.getString("Answer4")));
-//                            }
-//
-//                            pass();
-////                            Toast.makeText(FRQuestionActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
-//
-//                        }
-//                        else{
-//                            Toast.makeText(RankingQuestionActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
-
         firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("RankingQuestions")
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -156,7 +116,6 @@ public class RankingQuestionActivity extends AppCompatActivity implements View.O
 
             }
         });
-
 
 
 
