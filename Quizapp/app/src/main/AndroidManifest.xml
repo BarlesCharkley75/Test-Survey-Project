@@ -30,7 +30,7 @@
         <activity android:name=".RankingQuestionActivity" />
         <activity android:name=".MatchingQurestionActivity" />
         <activity android:name=".FRQuestionActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".MCQuestionActivity2" />
         <activity
             android:name=".TestListActivity"

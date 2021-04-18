@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.util.ArrayMap;
 import android.view.View;
 import android.widget.Button;
@@ -96,7 +97,8 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
                     QueryDocumentSnapshot quesDoc = docList.get("question" + String.valueOf(i));
 
                     questionList.add(new FRQuestion(quesDoc.getString("question"),
-                            quesDoc.getString("UserAnswer")));
+                            quesDoc.getString("UserAnswer"),
+                            Integer.valueOf(quesDoc.getString("WordLimit"))));
                 }
 
                 pass();
@@ -122,8 +124,27 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
 
 
     private void setQuestion(int i){
-        question.setText(questionList.get(i).getQuestion());
+        int limit = questionList.get(i).getWord_limit();
+
+
+        if(limit > 0){
+            question.setText(questionList.get(i).getQuestion() + " (Length limit: " + String.valueOf(limit)+")");
+        }
+        else{
+            question.setText(questionList.get(i).getQuestion() + " (No length limit)");
+        }
+
         q_count.setText(String.valueOf(i + 1) + "/" + String.valueOf(questionList.size()));
+
+
+        if(limit > 0){
+            user_input.setFilters(new InputFilter[]{
+                    new InputFilter.LengthFilter(limit)
+            });
+        }
+        else{
+            user_input.setFilters(new InputFilter[]{});
+        }
 
         if(!questionList.get(i).getUser_answer().equals("null")){
             user_input.setText(questionList.get(i).getUser_answer());

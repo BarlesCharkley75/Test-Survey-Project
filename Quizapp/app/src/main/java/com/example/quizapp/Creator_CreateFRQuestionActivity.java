@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -24,6 +25,7 @@ import static com.example.quizapp.MainActivity.testList;
 public class Creator_CreateFRQuestionActivity extends AppCompatActivity {
 
     private EditText question;
+    private TextInputLayout word_limit;
     private Button finish;
 
     private int count = 0;
@@ -36,6 +38,7 @@ public class Creator_CreateFRQuestionActivity extends AppCompatActivity {
 
 
         question = findViewById(R.id.question);
+        word_limit = findViewById(R.id.WordLimit);
         finish = findViewById(R.id.finish);
 
         firestore = FirebaseFirestore.getInstance();
@@ -61,6 +64,14 @@ public class Creator_CreateFRQuestionActivity extends AppCompatActivity {
 
                 questionData.put("question", question.getText().toString());
                 questionData.put("UserAnswer","null");
+
+                String limit = word_limit.getEditText().getText().toString();
+                if(limit.equals("")){
+                    questionData.put("WordLimit","-1");
+                }
+                else{
+                    questionData.put("WordLimit", limit);
+                }
 
                 firestore.collection("tests").document("test"+String.valueOf(testList.size() + 1))
                         .collection("FRQuestions").document("question"+String.valueOf(count + 1)).set(questionData)

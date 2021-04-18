@@ -22,7 +22,7 @@
             android:background="@color/light_grey"
             android:gravity="top|left"
             android:hint="Question"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:inputType="textMultiLine"
             android:lines="8"
             android:scrollbars="vertical"
@@ -31,11 +31,30 @@
 
         </EditText>
 
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/WordLimit"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/deep_blue"
+            android:layout_marginTop="40dp"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Word Limit"
+                android:layout_marginTop="40dp">
+
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
         <Button
             android:id="@+id/finish"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginTop="420dp"
+            android:layout_marginTop="330dp"
             android:text="Finish"
             android:textSize="20dp">
 
