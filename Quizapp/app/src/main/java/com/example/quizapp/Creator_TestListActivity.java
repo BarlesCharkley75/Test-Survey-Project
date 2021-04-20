@@ -4,16 +4,22 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.ArrayMap;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Map;
@@ -25,6 +31,7 @@ public class Creator_TestListActivity extends AppCompatActivity {
     private GridView creator_test_list_gridview;
     private Button AddNewTest;
     private FirebaseFirestore firestore;
+    private Dialog loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,25 +42,76 @@ public class Creator_TestListActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("List of Tests");
 
 
+
+
         creator_test_list_gridview = findViewById(R.id.creator_test_lists_gridview);
 
-        //Refer to TestListActivity to see how to set up the grid view adapter.
-        Creator_TestListAdapter adapter = new Creator_TestListAdapter(testList);
-        creator_test_list_gridview.setAdapter(adapter);
+
 
         firestore = FirebaseFirestore.getInstance();
         AddNewTest = findViewById(R.id.AddTestButton);
 
+        loading = new Dialog(Creator_TestListActivity.this);
+        loading.setContentView(R.layout.loading);
+        loading.setCancelable(false);
+        loading.getWindow().setBackgroundDrawableResource(R.drawable.loading_background);
+        loading.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        loading.show();
+
+        loadData();
+
+
+
+
+
+
         AddNewTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 addNewTest();
             }
         });
 
 
     }
+
+
+    private void loadData(){
+        testList.clear();
+        firestore.collection("tests").document("testList").
+                get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        long count = (long)doc.get("count");
+
+                        for(int i = 1; i <= count; i ++){
+                            String testName = doc.getString("test" + String.valueOf(i)+"_name");
+                            testList.add(testName);
+
+                            //Refer to TestListActivity to see how to set up the grid view adapter.
+                            Creator_TestListAdapter adapter = new Creator_TestListAdapter(testList);
+                            creator_test_list_gridview.setAdapter(adapter);
+
+                        }
+                        loading.cancel();
+                    }
+                    else{
+                        loading.cancel();
+                        Toast.makeText(Creator_TestListActivity.this, "No tests yet",Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }
+                else{
+                    loading.cancel();
+                    Toast.makeText(Creator_TestListActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
 
     private void addNewTest(){
         Map<String,Object> testData = new ArrayMap<>();
@@ -113,7 +171,6 @@ public class Creator_TestListActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(Creator_TestListActivity.this, "succeed1", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -123,7 +180,7 @@ public class Creator_TestListActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(Creator_TestListActivity.this, "succeed2", Toast.LENGTH_SHORT).show();
+
                     }
                 });
 
@@ -134,7 +191,7 @@ public class Creator_TestListActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(Creator_TestListActivity.this, "succeed3", Toast.LENGTH_SHORT).show();
+
                     }
                 });
 
@@ -144,7 +201,7 @@ public class Creator_TestListActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(Creator_TestListActivity.this, "succeed4", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Creator_TestListActivity.this, "succeed", Toast.LENGTH_SHORT).show();
                     }
                 });
 

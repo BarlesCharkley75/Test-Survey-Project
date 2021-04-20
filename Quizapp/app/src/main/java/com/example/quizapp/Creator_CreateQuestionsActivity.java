@@ -16,6 +16,9 @@ public class Creator_CreateQuestionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creator__create_questions);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Create questions");
+
 
         CreateMC = findViewById(R.id.CreateMCQuestion);
         CreateFR = findViewById(R.id.CreateFRQuestion);

@@ -23,6 +23,9 @@ public class CategoryActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Taker: Select Type");
 
         button_test = findViewById(R.id.button_test);
+        button_survey = findViewById(R.id.button_survey);
+
+
         button_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -30,6 +33,8 @@ public class CategoryActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
     };
 
 }

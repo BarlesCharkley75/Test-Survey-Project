@@ -18,7 +18,8 @@
             android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".Creator_CreateMCQuestionActivity"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".Creator_CreateQuestionsActivity" />
+        <activity android:name=".Creator_CreateQuestionsActivity"
+            android:parentActivityName=".Creator_TestListActivity"/>
         <activity android:name=".Creator_TestListActivity" />
         <activity
             android:name=".Creator_CategoryActivity"
