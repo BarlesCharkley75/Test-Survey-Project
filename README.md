@@ -1,1 +1,1 @@
-Open the “QuizApp” folder using Android Studio
+Open the “Quizapp” folder using Android Studio
