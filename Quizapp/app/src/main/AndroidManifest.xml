@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.quizapp">
 
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,7 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Quizapp">
-        <activity android:name=".UserProfileActivity"></activity>
+        <activity android:name=".Creator_RankingQuestionsListActivity"></activity>
+        <activity android:name=".Creator_MatchingQuestionsListActivity" />
+        <activity android:name=".Creator_FRQuestionsListActivity" />
+        <activity android:name=".Creator_MCQuestionsListActivity"
+            android:parentActivityName=".Creator_CreateQuestionsActivity"/>
+        <activity android:name=".UserProfileActivity" />
         <activity
             android:name=".Creator_CreateRankingQuestionActivity"
             android:windowSoftInputMode="adjustPan" />
@@ -23,11 +28,13 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Creator_CreateMCQuestionActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:parentActivityName=".Creator_MCQuestionsListActivity"/>
         <activity
             android:name=".Creator_CreateQuestionsActivity"
             android:parentActivityName=".Creator_TestListActivity" />
-        <activity android:name=".Creator_TestListActivity" />
+        <activity android:name=".Creator_TestListActivity"
+            android:parentActivityName=".Creator_CategoryActivity"/>
         <activity
             android:name=".Creator_CategoryActivity"
             android:parentActivityName=".UserTypeActivity" />

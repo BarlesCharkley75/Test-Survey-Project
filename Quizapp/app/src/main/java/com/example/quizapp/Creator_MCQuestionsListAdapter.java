@@ -7,24 +7,23 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class Creator_TestListAdapter extends BaseAdapter {
+public class Creator_MCQuestionsListAdapter extends BaseAdapter {
 
+    private ArrayList<String> questionList;
 
-    private ArrayList<String> testList;
+    private int NumOfTest;
 
-    public Creator_TestListAdapter(ArrayList<String> testList) {
-        this.testList = testList;
+    public Creator_MCQuestionsListAdapter(ArrayList<String> questionList, int NumOfTest) {
+        this.questionList = questionList;
+        this.NumOfTest = NumOfTest;
     }
-
 
     @Override
     public int getCount() {
-        return testList.size();
+        return questionList.size();
     }
 
     @Override
@@ -51,16 +50,17 @@ public class Creator_TestListAdapter extends BaseAdapter {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent( parent.getContext(), Creator_CreateQuestionsActivity.class);
+                Intent intent = new Intent( parent.getContext(), Creator_CreateMCQuestionActivity.class);
 //                intent.putExtra("info",1);
-                intent.putExtra("NAME", position + 1);
-                parent.getContext().startActivity(intent);
+                intent.putExtra("QuestionNAME", position + 1);
+                intent.putExtra("TestNAME", NumOfTest);
 
+                parent.getContext().startActivity(intent);
 
             }
         });
 
-        ((TextView)view.findViewById(R.id.list_num_textview)).setText(testList.get(position));
+        ((TextView)view.findViewById(R.id.list_num_textview)).setText(questionList.get(position));
         return view;
     }
 }

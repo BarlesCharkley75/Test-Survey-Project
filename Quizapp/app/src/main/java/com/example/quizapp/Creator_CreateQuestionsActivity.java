@@ -7,9 +7,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import static com.example.quizapp.MainActivity.testList;
+
 public class Creator_CreateQuestionsActivity extends AppCompatActivity {
 
     private Button CreateMC, CreateFR, CreateMatching, CreateRanking;
+
+    public static int CurrentNumOfTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +29,24 @@ public class Creator_CreateQuestionsActivity extends AppCompatActivity {
         CreateMatching = findViewById(R.id.CreateMatchingQuestion);
         CreateRanking = findViewById(R.id.CreateRankingQuestion);
 
+        Intent intent = getIntent();
+        int temp = intent.getIntExtra("NAME",0);
+
+
+        if(temp == -10){
+            CurrentNumOfTest = testList.size() + 1;
+        }
+        else if(temp != 0){
+            CurrentNumOfTest = temp;
+        }
+
+
 
         CreateMC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Creator_CreateQuestionsActivity.this, Creator_CreateMCQuestionActivity.class);
+                Intent intent = new Intent(Creator_CreateQuestionsActivity.this, Creator_MCQuestionsListActivity.class);
+                intent.putExtra("NAME",CurrentNumOfTest);
                 startActivity(intent);
             }
         });
@@ -37,7 +54,7 @@ public class Creator_CreateQuestionsActivity extends AppCompatActivity {
         CreateFR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Creator_CreateQuestionsActivity.this, Creator_CreateFRQuestionActivity.class);
+                Intent intent = new Intent(Creator_CreateQuestionsActivity.this, Creator_FRQuestionsListActivity.class);
                 startActivity(intent);
             }
         });
@@ -45,7 +62,7 @@ public class Creator_CreateQuestionsActivity extends AppCompatActivity {
         CreateMatching.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Creator_CreateQuestionsActivity.this, Creator_CreateMatchingQuestionActivity.class);
+                Intent intent = new Intent(Creator_CreateQuestionsActivity.this, Creator_MatchingQuestionsListActivity.class);
                 startActivity(intent);
             }
         });
@@ -53,7 +70,7 @@ public class Creator_CreateQuestionsActivity extends AppCompatActivity {
         CreateRanking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Creator_CreateQuestionsActivity.this, Creator_CreateRankingQuestionActivity.class);
+                Intent intent = new Intent(Creator_CreateQuestionsActivity.this, Creator_RankingQuestionsListActivity.class);
                 startActivity(intent);
             }
         });

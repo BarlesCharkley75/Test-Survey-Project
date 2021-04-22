@@ -33,9 +33,7 @@ import org.w3c.dom.Document;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
-    private Button start;//define buttons first
-
+    
     public static ArrayList<String> testList = new ArrayList<>();
 
     private FirebaseFirestore firestore;

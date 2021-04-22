@@ -44,7 +44,7 @@ public class UserProfileActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-        
+
 
         if(firebaseUser != null){
             //set image on image view

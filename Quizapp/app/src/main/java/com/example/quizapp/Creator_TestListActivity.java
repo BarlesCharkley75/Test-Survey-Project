@@ -210,6 +210,7 @@ public class Creator_TestListActivity extends AppCompatActivity {
 
     private void createQuestions(){
         Intent intent = new Intent(Creator_TestListActivity.this,Creator_CreateQuestionsActivity.class);
+        intent.putExtra("NAME",-10);
         startActivity(intent);
     }
 
