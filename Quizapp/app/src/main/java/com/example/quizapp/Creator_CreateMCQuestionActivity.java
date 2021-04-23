@@ -32,9 +32,13 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
 
     private Button finish;
 
+
     private int count = 0;
+    private int next = 0;
 
     private int NumOfQuestion;
+
+    private String current_id;
 
     private boolean modifying = false;
 
@@ -75,7 +79,7 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
 
 
 
-        setInterface();
+
 
 
         //get number of questions we already have
@@ -88,11 +92,15 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             DocumentSnapshot doc = task.getResult();
                             if(doc.exists()){
-                                count = Integer.valueOf(doc.getString("count"));
+                                count = Integer.valueOf((doc.getString("count")));
+                                next = Integer.valueOf(doc.getString("NEXT"));
                             }
                         }
                     }
                 });
+
+
+        setInterface();
 
 
 
@@ -116,7 +124,7 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
 
 
                     firestore.collection("tests").document("test"+String.valueOf(CurrentNumOfTest))
-                            .collection("MCQuestions").document("question"+String.valueOf(count + 1)).set(questionData)
+                            .collection("MCQuestions").document("question"+String.valueOf(next)).set(questionData)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -125,6 +133,8 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
                                     Map<String,Object> newList = new ArrayMap<>();
 
                                     newList.put("count",String.valueOf(count + 1));
+                                    newList.put("NEXT", String.valueOf(next + 1));
+                                    newList.put("question"+String.valueOf(count + 1)+"_id","question"+String.valueOf(next));
 
                                     firestore.collection("tests").document("test"+String.valueOf(CurrentNumOfTest))
                                             .collection("MCQuestions").document("questionList").update(newList)
@@ -175,32 +185,51 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
         if(CurrentNumOfTest > 0 && NumOfQuestion > 0){//it means we are modifying existed questions
             modifying = true;
 
+
+            //get current question id
+
             firestore.collection("tests").document("test"+String.valueOf(CurrentNumOfTest))
-                    .collection("MCQuestions").document("question"+String.valueOf(NumOfQuestion))
-                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if(task.isSuccessful()){
-                        DocumentSnapshot doc = task.getResult();
-                        if(doc.exists()){
-                            String question_text = doc.getString("question");
-                            String option1_text = doc.getString("option1");
-                            String option2_text = doc.getString("option2");
-                            String option3_text = doc.getString("option3");
-                            String option4_text = doc.getString("option4");
-                            String CorrectAnswer_text = doc.getString("CorrectAnswer");
+                    .collection("MCQuestions").document("questionList").get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if(task.isSuccessful()){
+                                DocumentSnapshot doc = task.getResult();
+                                if(doc.exists()){
+                                    current_id = doc.getString("question" + String.valueOf(NumOfQuestion)+"_id");
 
-                            question.setText(question_text);
-                            option1.getEditText().setText(option1_text);
-                            option2.getEditText().setText(option2_text);
-                            option3.getEditText().setText(option3_text);
-                            option4.getEditText().setText(option4_text);
-                            Answer.getEditText().setText(CorrectAnswer_text);
+                                    firestore.collection("tests").document("test"+String.valueOf(CurrentNumOfTest))
+                                            .collection("MCQuestions").document(current_id)
+                                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if(task.isSuccessful()){
+                                                DocumentSnapshot doc = task.getResult();
+                                                if(doc.exists()){
+                                                    String question_text = doc.getString("question");
+                                                    String option1_text = doc.getString("option1");
+                                                    String option2_text = doc.getString("option2");
+                                                    String option3_text = doc.getString("option3");
+                                                    String option4_text = doc.getString("option4");
+                                                    String CorrectAnswer_text = doc.getString("CorrectAnswer");
 
+                                                    question.setText(question_text);
+                                                    option1.getEditText().setText(option1_text);
+                                                    option2.getEditText().setText(option2_text);
+                                                    option3.getEditText().setText(option3_text);
+                                                    option4.getEditText().setText(option4_text);
+                                                    Answer.getEditText().setText(CorrectAnswer_text);
+
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                            }
                         }
-                    }
-                }
-            });
+                    });
+
+
 
         }
         else{

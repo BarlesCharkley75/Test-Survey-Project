@@ -33,7 +33,7 @@ public class Creator_CreateQuestionsActivity extends AppCompatActivity {
         int temp = intent.getIntExtra("NAME",0);
 
 
-        if(temp == -10){
+        if(temp == -10){//this is a new test
             CurrentNumOfTest = testList.size() + 1;
         }
         else if(temp != 0){
