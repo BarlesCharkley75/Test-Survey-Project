@@ -23,6 +23,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Map;
 
 import static com.example.quizapp.Creator_CreateQuestionsActivity.CurrentNumOfTest;
+import static com.example.quizapp.Creator_MCQuestionsListActivity.MC_id_list;
+
+import static com.example.quizapp.Creator_TestListActivity.test_id_list;
 import static com.example.quizapp.MainActivity.testList;
 
 public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
@@ -84,7 +87,7 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
 
         //get number of questions we already have
 
-        firestore.collection("tests").document("test"+String.valueOf(CurrentNumOfTest))
+        firestore.collection("tests").document(test_id_list.get(CurrentNumOfTest))
                 .collection("MCQuestions").document("questionList").get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -123,7 +126,7 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
                     questionData.put("SelectedAnswer","0");
 
 
-                    firestore.collection("tests").document("test"+String.valueOf(CurrentNumOfTest))
+                    firestore.collection("tests").document(test_id_list.get(CurrentNumOfTest))
                             .collection("MCQuestions").document("question"+String.valueOf(next)).set(questionData)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -136,7 +139,7 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
                                     newList.put("NEXT", String.valueOf(next + 1));
                                     newList.put("question"+String.valueOf(count + 1)+"_id","question"+String.valueOf(next));
 
-                                    firestore.collection("tests").document("test"+String.valueOf(CurrentNumOfTest))
+                                    firestore.collection("tests").document(test_id_list.get(CurrentNumOfTest))
                                             .collection("MCQuestions").document("questionList").update(newList)
                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
@@ -164,8 +167,8 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
                     questionData.put("CorrectAnswer", Answer.getEditText().getText().toString());
                     questionData.put("SelectedAnswer","0");
 
-                    firestore.collection("tests").document("test"+String.valueOf(CurrentNumOfTest))
-                            .collection("MCQuestions").document("question"+String.valueOf(NumOfQuestion)).update(questionData)
+                    firestore.collection("tests").document(test_id_list.get(CurrentNumOfTest))
+                            .collection("MCQuestions").document(MC_id_list.get(NumOfQuestion - 1)).update(questionData)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -182,13 +185,13 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
 
     private void setInterface(){
 
-        if(CurrentNumOfTest > 0 && NumOfQuestion > 0){//it means we are modifying existed questions
+        if(CurrentNumOfTest >= 0 && NumOfQuestion > 0){//it means we are modifying existed questions
             modifying = true;
 
 
             //get current question id
 
-            firestore.collection("tests").document("test"+String.valueOf(CurrentNumOfTest))
+            firestore.collection("tests").document(test_id_list.get(CurrentNumOfTest))
                     .collection("MCQuestions").document("questionList").get()
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -198,7 +201,7 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
                                 if(doc.exists()){
                                     current_id = doc.getString("question" + String.valueOf(NumOfQuestion)+"_id");
 
-                                    firestore.collection("tests").document("test"+String.valueOf(CurrentNumOfTest))
+                                    firestore.collection("tests").document(test_id_list.get(CurrentNumOfTest))
                                             .collection("MCQuestions").document(current_id)
                                             .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                         @Override

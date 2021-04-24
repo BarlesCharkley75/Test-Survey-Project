@@ -114,10 +114,11 @@ public class MainActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
-                        long count = (long)doc.get("count");
+                        int count = Integer.valueOf(doc.getString("count"));
 
                         for(int i = 1; i <= count; i ++){
-                            String testName = doc.getString("test" + String.valueOf(i)+"_name");
+//                            String testName = doc.getString("test" + String.valueOf(i)+"_name");
+                            String testName = "test"+String.valueOf(i);
                             testList.add(testName);
 
                         }

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static com.example.quizapp.Creator_CreateQuestionsActivity.CurrentNumOfTest;
+import static com.example.quizapp.Creator_TestListActivity.test_id_list;
 import static com.example.quizapp.MainActivity.testList;
 
 public class Creator_MCQuestionsListActivity extends AppCompatActivity {
@@ -35,6 +36,8 @@ public class Creator_MCQuestionsListActivity extends AppCompatActivity {
 
     private ArrayList<String> sub_MCQuestionsList = new ArrayList<>();
 
+    public static ArrayList<String> MC_id_list = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,7 @@ public class Creator_MCQuestionsListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_creator__m_c_questions_list);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("List of MC questions");
+        getSupportActionBar().setTitle("test"+String.valueOf(CurrentNumOfTest + 1)+": " + "List of MC questions");
 
         MCQuestion_List = findViewById(R.id.creator_MCQuestions_list_gridview);
         add_new_question = findViewById(R.id.AddQuestionButton);
@@ -74,7 +77,8 @@ public class Creator_MCQuestionsListActivity extends AppCompatActivity {
 
     private void loadData(){
         sub_MCQuestionsList.clear();
-        firestore.collection("tests").document("test" + String.valueOf(CurrentNumOfTest)).collection("MCQuestions")
+        MC_id_list.clear();
+        firestore.collection("tests").document(test_id_list.get(CurrentNumOfTest)).collection("MCQuestions")
                 .document("questionList").get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -89,17 +93,21 @@ public class Creator_MCQuestionsListActivity extends AppCompatActivity {
                             String testName = "question" + String.valueOf(i);
                             sub_MCQuestionsList.add(testName);
 
-                            //Refer to TestListActivity to see how to set up the grid view adapter.
-                            Creator_MCQuestionsListAdapter adapter = new Creator_MCQuestionsListAdapter(sub_MCQuestionsList, CurrentNumOfTest);
-                            MCQuestion_List.setAdapter(adapter);
+
+                            MC_id_list.add(doc.getString("question" + String.valueOf(i)+"_id"));
 
                         }
+
+                        //Refer to TestListActivity to see how to set up the grid view adapter.
+                        Creator_MCQuestionsListAdapter adapter = new Creator_MCQuestionsListAdapter(sub_MCQuestionsList);
+                        MCQuestion_List.setAdapter(adapter);
+
                         loading.cancel();
                     }
                     else{
                         loading.cancel();
                         Toast.makeText(Creator_MCQuestionsListActivity.this, "No tests yet",Toast.LENGTH_SHORT).show();
-                        Creator_MCQuestionsListAdapter adapter = new Creator_MCQuestionsListAdapter(sub_MCQuestionsList, CurrentNumOfTest);
+                        Creator_MCQuestionsListAdapter adapter = new Creator_MCQuestionsListAdapter(sub_MCQuestionsList);
                         MCQuestion_List.setAdapter(adapter);
                     }
                 }

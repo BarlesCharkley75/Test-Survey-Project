@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import static com.example.quizapp.MainActivity.testList;
@@ -32,6 +33,10 @@ public class Creator_TestListActivity extends AppCompatActivity {
     private Button AddNewTest;
     private FirebaseFirestore firestore;
     private Dialog loading;
+
+    private int count, next;
+
+    public static ArrayList<String> test_id_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,7 @@ public class Creator_TestListActivity extends AppCompatActivity {
 
     private void loadData(){
         testList.clear();
+        test_id_list = new ArrayList<>();
         firestore.collection("tests").document("testList").
                 get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -85,17 +91,24 @@ public class Creator_TestListActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
-                        long count = (long)doc.get("count");
+
+                        count = Integer.valueOf(doc.getString("count"));
+                        next = Integer.valueOf(doc.getString("NEXT"));
 
                         for(int i = 1; i <= count; i ++){
-                            String testName = doc.getString("test" + String.valueOf(i)+"_name");
+//                            String testName = doc.getString("test" + String.valueOf(i)+"_name");
+                            String testName = "test" + String.valueOf(i);
                             testList.add(testName);
 
-                            //Refer to TestListActivity to see how to set up the grid view adapter.
-                            Creator_TestListAdapter adapter = new Creator_TestListAdapter(testList);
-                            creator_test_list_gridview.setAdapter(adapter);
+                            test_id_list.add(doc.getString("test"+String.valueOf(i)+"_id"));
+
 
                         }
+
+                        //Refer to TestListActivity to see how to set up the grid view adapter.
+                        Creator_TestListAdapter adapter = new Creator_TestListAdapter(testList);
+                        creator_test_list_gridview.setAdapter(adapter);
+
                         loading.cancel();
                     }
                     else{
@@ -116,12 +129,12 @@ public class Creator_TestListActivity extends AppCompatActivity {
     private void addNewTest(){
         Map<String,Object> testData = new ArrayMap<>();
 
-        testData.put("name", "test" + String.valueOf(testList.size() + 1));
-        testData.put("NumOfQuestions", 0);
+        testData.put("name", "test" + String.valueOf(count + 1));
+
 
 
 //      update the database to add a new test.
-        String doc_id = "test" + String.valueOf(testList.size()+1);
+        String doc_id = "test" + String.valueOf(next);
 
         firestore.collection("tests").document(doc_id)
                 .set(testData).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -130,13 +143,17 @@ public class Creator_TestListActivity extends AppCompatActivity {
 
                 Map<String , Object> testDoc = new ArrayMap<>();
 
-                testDoc.put("test" + String.valueOf(testList.size() + 1)+"_name", "test" + String.valueOf(testList.size() + 1));
-                testDoc.put("count", testList.size() + 1);
+                testDoc.put("test" + String.valueOf(count + 1)+"_id", "test" + String.valueOf(next));
+                testDoc.put("count", String.valueOf(testList.size() + 1));
+                testDoc.put("NEXT", String.valueOf(next + 1));
 
                 firestore.collection("tests").document("testList")
                         .update(testDoc).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+
+                        test_id_list.add("test"+String.valueOf(next));
+
                         Toast.makeText(Creator_TestListActivity.this, "succeed", Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -161,12 +178,13 @@ public class Creator_TestListActivity extends AppCompatActivity {
     private void addQuestionSets(){
         Map<String, Object> questionSetData = new ArrayMap<>();
         questionSetData.put("count","0");
+        questionSetData.put("NEXT","1");
 
 
 
 //        Add MCQuestions
 
-        firestore.collection("tests").document("test"+String.valueOf(testList.size() + 1))
+        firestore.collection("tests").document("test"+String.valueOf(next))
                 .collection("MCQuestions").document("questionList").set(questionSetData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -175,7 +193,7 @@ public class Creator_TestListActivity extends AppCompatActivity {
                 });
 
 //        Add FRQuestions
-        firestore.collection("tests").document("test"+String.valueOf(testList.size() + 1))
+        firestore.collection("tests").document("test"+String.valueOf(next))
                 .collection("FRQuestions").document("questionList").set(questionSetData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -186,7 +204,7 @@ public class Creator_TestListActivity extends AppCompatActivity {
 
 //        Add MatchingQuestions
 
-        firestore.collection("tests").document("test"+String.valueOf(testList.size() + 1))
+        firestore.collection("tests").document("test"+String.valueOf(next))
                 .collection("MatchingQuestions").document("questionList").set(questionSetData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -196,7 +214,7 @@ public class Creator_TestListActivity extends AppCompatActivity {
                 });
 
 //        Add RankingQuestions
-        firestore.collection("tests").document("test"+String.valueOf(testList.size() + 1))
+        firestore.collection("tests").document("test"+String.valueOf(next))
                 .collection("RankingQuestions").document("questionList").set(questionSetData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -204,6 +222,8 @@ public class Creator_TestListActivity extends AppCompatActivity {
                         Toast.makeText(Creator_TestListActivity.this, "succeed", Toast.LENGTH_SHORT).show();
                     }
                 });
+
+
 
         createQuestions();
     }

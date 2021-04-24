@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static com.example.quizapp.Creator_CreateQuestionsActivity.CurrentNumOfTest;
+import static com.example.quizapp.Creator_MCQuestionsListActivity.MC_id_list;
+import static com.example.quizapp.Creator_TestListActivity.test_id_list;
 
 public class Creator_MCQuestionsListAdapter extends BaseAdapter {
 
@@ -40,9 +42,11 @@ public class Creator_MCQuestionsListAdapter extends BaseAdapter {
 
     private int count ,next;
 
-    public Creator_MCQuestionsListAdapter(ArrayList<String> questionList, int NumOfTest) {
+
+
+    public Creator_MCQuestionsListAdapter(ArrayList<String> questionList) {
         this.questionList = questionList;
-        this.NumOfTest = NumOfTest;
+
     }
 
     @Override
@@ -79,7 +83,7 @@ public class Creator_MCQuestionsListAdapter extends BaseAdapter {
                 Intent intent = new Intent( parent.getContext(), Creator_CreateMCQuestionActivity.class);
 //                intent.putExtra("info",1);
                 intent.putExtra("QuestionNAME", position + 1);
-                intent.putExtra("TestNAME", NumOfTest);
+//                intent.putExtra("TestNAME", NumOfTest);
 
                 parent.getContext().startActivity(intent);
 
@@ -95,12 +99,12 @@ public class Creator_MCQuestionsListAdapter extends BaseAdapter {
 
                 AlertDialog alertDialog = new AlertDialog.Builder(parent.getContext())
                         .setTitle("Delete question")
-                        .setMessage("Are you sure you want to delete this question?")
+                        .setMessage("Are you sure you want to delete question " +String.valueOf(position + 1) + "?")
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                firestore.collection("tests").document("test"+String.valueOf(CurrentNumOfTest))
+                                firestore.collection("tests").document(test_id_list.get(CurrentNumOfTest))
                                         .collection("MCQuestions").document("questionList")
                                         .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
@@ -112,17 +116,16 @@ public class Creator_MCQuestionsListAdapter extends BaseAdapter {
                                                 count = Integer.valueOf(doc.getString("count"));
                                                 next = Integer.valueOf(doc.getString("NEXT"));
 
-
-                                                firestore.collection("tests").document("test"+String.valueOf(CurrentNumOfTest))
+                                                firestore.collection("tests").document(test_id_list.get(CurrentNumOfTest))
                                                         .collection("MCQuestions").document(id)
                                                         .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
                                                         Map<String,Object> quesDoc = new ArrayMap<>();
                                                         int index = 1;
-                                                        for( int i = 0; i < questionList.size(); i++){
+                                                        for( int i = 0; i < count; i++){
                                                             if(i != position ){
-                                                                quesDoc.put("question"+String.valueOf(index)+"_id","question"+String.valueOf(i + 1));
+                                                                quesDoc.put("question"+String.valueOf(index)+"_id",MC_id_list.get(i));
                                                                 index ++;
                                                             }
                                                         }
@@ -130,7 +133,11 @@ public class Creator_MCQuestionsListAdapter extends BaseAdapter {
                                                         quesDoc.put("count",String.valueOf(count - 1));
                                                         quesDoc.put("NEXT",String.valueOf(next));
 
-                                                        firestore.collection("tests").document("test"+String.valueOf(CurrentNumOfTest))
+
+
+
+
+                                                        firestore.collection("tests").document(test_id_list.get(CurrentNumOfTest))
                                                                 .collection("MCQuestions").document("questionList")
                                                                 .set(quesDoc).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                             @Override
