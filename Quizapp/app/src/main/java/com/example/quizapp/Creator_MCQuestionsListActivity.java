@@ -106,7 +106,7 @@ public class Creator_MCQuestionsListActivity extends AppCompatActivity {
                     }
                     else{
                         loading.cancel();
-                        Toast.makeText(Creator_MCQuestionsListActivity.this, "No tests yet",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Creator_MCQuestionsListActivity.this, "No question yet",Toast.LENGTH_SHORT).show();
                         Creator_MCQuestionsListAdapter adapter = new Creator_MCQuestionsListAdapter(sub_MCQuestionsList);
                         MCQuestion_List.setAdapter(adapter);
                     }

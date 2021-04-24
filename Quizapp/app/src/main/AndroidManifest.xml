@@ -11,9 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Quizapp">
-        <activity android:name=".Creator_RankingQuestionsListActivity"></activity>
-        <activity android:name=".Creator_MatchingQuestionsListActivity" />
-        <activity android:name=".Creator_FRQuestionsListActivity" />
+        <activity android:name=".Creator_RankingQuestionsListActivity"
+            android:parentActivityName=".Creator_CreateQuestionsActivity"></activity>
+        <activity android:name=".Creator_MatchingQuestionsListActivity"
+            android:parentActivityName=".Creator_CreateQuestionsActivity"/>
+        <activity android:name=".Creator_FRQuestionsListActivity"
+            android:parentActivityName=".Creator_CreateQuestionsActivity"/>
         <activity android:name=".Creator_MCQuestionsListActivity"
             android:parentActivityName=".Creator_CreateQuestionsActivity"/>
         <activity android:name=".UserProfileActivity" />
