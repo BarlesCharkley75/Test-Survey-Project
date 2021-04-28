@@ -9,7 +9,8 @@ import android.widget.ScrollView;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-import static com.example.quizapp.MainActivity.testList;
+
+import static com.example.quizapp.UserProfileActivity.testList;
 
 public class TestListActivity extends AppCompatActivity {
 

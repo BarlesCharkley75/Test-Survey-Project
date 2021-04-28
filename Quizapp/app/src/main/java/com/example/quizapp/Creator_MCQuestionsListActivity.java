@@ -23,7 +23,7 @@ import java.util.Map;
 
 import static com.example.quizapp.Creator_CreateQuestionsActivity.CurrentNumOfTest;
 import static com.example.quizapp.Creator_TestListActivity.test_id_list;
-import static com.example.quizapp.MainActivity.testList;
+
 
 public class Creator_MCQuestionsListActivity extends AppCompatActivity {
 

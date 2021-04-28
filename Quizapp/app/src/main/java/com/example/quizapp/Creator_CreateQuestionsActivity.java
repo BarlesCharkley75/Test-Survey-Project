@@ -14,7 +14,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import static com.example.quizapp.Creator_TestListActivity.test_id_list;
-import static com.example.quizapp.MainActivity.testList;
+
+import static com.example.quizapp.UserProfileActivity.testList;
 
 public class Creator_CreateQuestionsActivity extends AppCompatActivity {
 

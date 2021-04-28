@@ -3,9 +3,11 @@ package com.example.quizapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +21,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
+
+import java.util.ArrayList;
 
 public class UserProfileActivity extends AppCompatActivity {
 
@@ -28,6 +35,13 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private GoogleSignInClient googleSignInClient;
+
+    public static ArrayList<String> testList = new ArrayList<>();
+    public static ArrayList<String> TEST_IDs;
+
+    private FirebaseFirestore firestore;
+
+    private Dialog loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +53,8 @@ public class UserProfileActivity extends AppCompatActivity {
         user_name = findViewById(R.id.user_name);
         log_out = findViewById(R.id.log_out_button);
         keep_going = findViewById(R.id.keep_going);
+
+        firestore = FirebaseFirestore.getInstance();
 
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -57,6 +73,17 @@ public class UserProfileActivity extends AppCompatActivity {
 
         //Initialize sign in client
         googleSignInClient = GoogleSignIn.getClient(UserProfileActivity.this, GoogleSignInOptions.DEFAULT_SIGN_IN);
+
+
+        //a loading interface when fetching data from database
+        loading = new Dialog(UserProfileActivity.this);
+        loading.setContentView(R.layout.loading);
+        loading.setCancelable(false);
+        loading.getWindow().setBackgroundDrawableResource(R.drawable.loading_background);
+        loading.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        loading.show();
+
+        loadData();
 
         log_out.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +109,44 @@ public class UserProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(UserProfileActivity.this, UserTypeActivity.class);
                 startActivity(intent);
+            }
+        });
+    }
+
+
+    private void loadData(){
+        testList.clear();
+        TEST_IDs = new ArrayList<>();
+        firestore.collection("tests").document("testList").
+                get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        int count = Integer.valueOf(doc.getString("count"));
+
+                        for(int i = 1; i <= count; i ++){
+//                            String testName = doc.getString("test" + String.valueOf(i)+"_name");
+                            String testName = "test"+String.valueOf(i);
+                            testList.add(testName);
+
+                            TEST_IDs.add(doc.getString("test"+String.valueOf(i)+"_id"));
+
+                        }
+                        loading.cancel();
+                        Toast.makeText(UserProfileActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        loading.cancel();
+                        Toast.makeText(UserProfileActivity.this, "No tests yet",Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }
+                else{
+                    loading.cancel();
+                    Toast.makeText(UserProfileActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
