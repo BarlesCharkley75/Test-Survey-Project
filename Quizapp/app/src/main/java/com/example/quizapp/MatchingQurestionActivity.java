@@ -3,12 +3,14 @@ package com.example.quizapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.ArrayMap;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -24,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static com.example.quizapp.MCQuestionActivity2.NumOfTest;
+import static com.example.quizapp.UserProfileActivity.TEST_IDs;
 
 public class MatchingQurestionActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -42,6 +46,11 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
     private int correct_match;
 
     private FirebaseFirestore firestore;
+    
+    public static ArrayList<String> MATCHING_IDs;
+    private Dialog loading;
+
+    private int count;
 
 
     @Override
@@ -86,6 +95,16 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
 
         firestore = FirebaseFirestore.getInstance();
 
+        questionList = new ArrayList<>();
+        MATCHING_IDs = new ArrayList<>();
+
+        loading = new Dialog(MatchingQurestionActivity.this);
+        loading.setContentView(R.layout.loading);
+        loading.setCancelable(false);
+        loading.getWindow().setBackgroundDrawableResource(R.drawable.loading_background);
+        loading.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        loading.show();
+
 
 
         getQuestionList();
@@ -93,10 +112,51 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
     }
 
     private void getQuestionList(){
-        questionList = new ArrayList<MatchingQuestion>();
+
+//        questionList.clear();
+
+        MATCHING_IDs.clear();
+
+        firestore.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("MatchingQuestions")
+                .document("questionList").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        count = Integer.valueOf(doc.getString("count"));
 
 
-        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("MatchingQuestions")
+
+                        for(int i = 1; i <= count; i++){
+                            MATCHING_IDs.add(doc.getString("question"+String.valueOf(i)+"_id"));
+                        }
+
+                        if(count == 0){
+                            //no matching questions, go to ranking questions
+
+                            Intent intent = new Intent (MatchingQurestionActivity.this, RankingQuestionActivity.class);
+                            intent.putExtra("info",1);
+                            startActivity(intent);
+
+                        }
+                        else {
+                            setQuestionList();
+                        }
+
+
+                    }
+
+                }
+            }
+        });
+
+
+
+    }
+
+    private void setQuestionList(){
+        firestore.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("MatchingQuestions")
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -105,13 +165,13 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
                 for(QueryDocumentSnapshot doc : queryDocumentSnapshots){
                     docList.put(doc.getId(),doc);
                 }
-                QueryDocumentSnapshot quesListDoc = docList.get("questionList");
-                String count = quesListDoc.getString("count");
+//                QueryDocumentSnapshot quesListDoc = docList.get("questionList");
+//                String count = quesListDoc.getString("count");
 
-                for(int i = 1 ; i<= Integer.valueOf(count); i++){
+                for(int i = 0 ; i< count; i++){
 //                    String quesName = "question" + String.valueOf(i);
 
-                    QueryDocumentSnapshot quesDoc = docList.get("question" + String.valueOf(i));
+                    QueryDocumentSnapshot quesDoc = docList.get(MATCHING_IDs.get(i));
 
                     questionList.add(new MatchingQuestion(
                             quesDoc.getString("question"),
@@ -133,12 +193,11 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
                             Integer.valueOf(quesDoc.getString("L4_selected"))));
                 }
 
+
                 pass();
 
             }
         });
-
-
     }
 
     private void pass(){
@@ -240,6 +299,7 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
                 option4_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffff97")));
             }
         }
+        loading.cancel();
 
     }
 
@@ -383,6 +443,23 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
 
     private void changeQuestionForward(){
         if(current_question >= questionList.size()-1){
+            //upload answers
+            Map<String , Object> Answers = new ArrayMap<>();
+
+            for(int i = 0; i < count; i++){
+                Answers.clear();
+                Answers.put("L1_selected",String.valueOf(questionList.get(i).getL1_selected()));
+                Answers.put("L2_selected",String.valueOf(questionList.get(i).getL2_selected()));
+                Answers.put("L3_selected",String.valueOf(questionList.get(i).getL3_selected()));
+                Answers.put("L4_selected",String.valueOf(questionList.get(i).getL4_selected()));
+
+                firestore.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("MatchingQuestions")
+                        .document(MATCHING_IDs.get(i)).update(Answers);
+
+            }
+
+
+            //go to next activity
             Intent intent = new Intent (MatchingQurestionActivity.this, RankingQuestionActivity.class);
             intent.putExtra("info",1);
             startActivity(intent);

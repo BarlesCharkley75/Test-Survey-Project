@@ -3,12 +3,14 @@ package com.example.quizapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.ArrayMap;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -25,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static com.example.quizapp.MCQuestionActivity2.NumOfTest;
+import static com.example.quizapp.UserProfileActivity.TEST_IDs;
 
 public class RankingQuestionActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -40,6 +44,11 @@ public class RankingQuestionActivity extends AppCompatActivity implements View.O
     private int info = 0;
 
     private FirebaseFirestore firestore;
+
+    public static ArrayList<String> RANKING_IDs;
+    private Dialog loading;
+
+    private int count;
 
 
     @Override
@@ -73,13 +82,70 @@ public class RankingQuestionActivity extends AppCompatActivity implements View.O
 
         firestore = FirebaseFirestore.getInstance();
 
+        RANKING_IDs = new ArrayList<>();
+        questionList = new ArrayList<>();
+
+
+        loading = new Dialog(RankingQuestionActivity.this);
+        loading.setContentView(R.layout.loading);
+        loading.setCancelable(false);
+        loading.getWindow().setBackgroundDrawableResource(R.drawable.loading_background);
+        loading.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        loading.show();
+
         getQuestionList();
     }
 
     private void getQuestionList(){
-        questionList = new ArrayList<RankingQuestion>();
 
-        firestore.collection("tests").document("test" + String.valueOf(NumOfTest)).collection("RankingQuestions")
+//        questionList.clear();
+
+        RANKING_IDs.clear();
+
+        firestore.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("RankingQuestions")
+                .document("questionList").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        count = Integer.valueOf(doc.getString("count"));
+
+
+
+                        for(int i = 1; i <= count; i++){
+                            RANKING_IDs.add(doc.getString("question"+String.valueOf(i)+"_id"));
+                        }
+
+                        if(count == 0){
+                            //no ranking question, go to submission page.
+
+                            Intent intent = new Intent(RankingQuestionActivity.this, SubmissionActivity.class);
+                            intent.putExtra("info",1);
+
+                            startActivity(intent);
+
+                        }
+                        else{
+                            setQuestionList();
+                        }
+
+
+
+                    }
+                }
+            }
+        });
+
+
+
+
+
+    }
+
+
+    private void setQuestionList(){
+        firestore.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("RankingQuestions")
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -88,13 +154,13 @@ public class RankingQuestionActivity extends AppCompatActivity implements View.O
                 for(QueryDocumentSnapshot doc : queryDocumentSnapshots){
                     docList.put(doc.getId(),doc);
                 }
-                QueryDocumentSnapshot quesListDoc = docList.get("questionList");
-                String count = quesListDoc.getString("count");
+//                QueryDocumentSnapshot quesListDoc = docList.get("questionList");
+//                String count = quesListDoc.getString("count");
 
-                for(int i = 1 ; i<= Integer.valueOf(count); i++){
+                for(int i = 0 ; i < count; i++){
 //                    String quesName = "question" + String.valueOf(i);
 
-                    QueryDocumentSnapshot quesDoc = docList.get("question" + String.valueOf(i));
+                    QueryDocumentSnapshot quesDoc = docList.get(RANKING_IDs.get(i));
 
                     questionList.add(new RankingQuestion(
                             quesDoc.getString("question"),
@@ -112,13 +178,12 @@ public class RankingQuestionActivity extends AppCompatActivity implements View.O
                             quesDoc.getString("Answer4")));
                 }
 
+
+
                 pass();
 
             }
         });
-
-
-
     }
 
     private void pass(){
@@ -166,6 +231,8 @@ public class RankingQuestionActivity extends AppCompatActivity implements View.O
             input4.setText(questionList.get(current_question).getUser_input4());
         }
 
+        loading.cancel();
+
     }
 
     @Override
@@ -197,6 +264,24 @@ public class RankingQuestionActivity extends AppCompatActivity implements View.O
         }
 
         else{
+            //upload answers
+            Map<String , Object> Answers = new ArrayMap<>();
+
+            for(int i = 0; i < count; i++){
+                Answers.clear();
+                Answers.put("user_input1",String.valueOf(questionList.get(i).getUser_input1()));
+                Answers.put("user_input2",String.valueOf(questionList.get(i).getUser_input2()));
+                Answers.put("user_input3",String.valueOf(questionList.get(i).getUser_input3()));
+                Answers.put("user_input4",String.valueOf(questionList.get(i).getUser_input4()));
+
+                firestore.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("RankingQuestions")
+                        .document(RANKING_IDs.get(i)).update(Answers);
+
+            }
+
+
+
+            //go to submission
             Intent intent = new Intent(RankingQuestionActivity.this, SubmissionActivity.class);
             intent.putExtra("info",1);
 

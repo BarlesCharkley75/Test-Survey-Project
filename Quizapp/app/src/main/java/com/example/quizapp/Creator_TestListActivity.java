@@ -25,7 +25,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static com.example.quizapp.MainActivity.testList;
+
+import static com.example.quizapp.UserProfileActivity.testList;
 
 public class Creator_TestListActivity extends AppCompatActivity {
 

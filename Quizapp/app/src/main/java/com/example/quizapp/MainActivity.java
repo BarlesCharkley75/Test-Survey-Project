@@ -34,8 +34,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     
-    public static ArrayList<String> testList = new ArrayList<>();
-
+//    public static ArrayList<String> testList = new ArrayList<>();
+//    public static ArrayList<String> TEST_IDs;
+//
     private FirebaseFirestore firestore;
 
     private Dialog loading;
@@ -55,16 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
         sign_in_button = findViewById(R.id.sign_in_button);
 
-        //a loading interface when fetching data from database
-        loading = new Dialog(MainActivity.this);
-        loading.setContentView(R.layout.loading);
-        loading.setCancelable(false);
-        loading.getWindow().setBackgroundDrawableResource(R.drawable.loading_background);
-        loading.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        loading.show();
 
 
-        loadData();
+
+//        loadData();
 
 
         //Initialize sign in options
@@ -105,39 +100,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Firebase stuff, trying to get data from firestore.
-    private void loadData(){
-        testList.clear();
-        firestore.collection("tests").document("testList").
-                get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    DocumentSnapshot doc = task.getResult();
-                    if(doc.exists()){
-                        int count = Integer.valueOf(doc.getString("count"));
-
-                        for(int i = 1; i <= count; i ++){
-//                            String testName = doc.getString("test" + String.valueOf(i)+"_name");
-                            String testName = "test"+String.valueOf(i);
-                            testList.add(testName);
-
-                        }
-                        loading.cancel();
-                        Toast.makeText(MainActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        loading.cancel();
-                        Toast.makeText(MainActivity.this, "No tests yet",Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                }
-                else{
-                    loading.cancel();
-                    Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
+//    private void loadData(){
+//        testList.clear();
+//        TEST_IDs = new ArrayList<>();
+//        firestore.collection("tests").document("testList").
+//                get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if(task.isSuccessful()){
+//                    DocumentSnapshot doc = task.getResult();
+//                    if(doc.exists()){
+//                        int count = Integer.valueOf(doc.getString("count"));
+//
+//                        for(int i = 1; i <= count; i ++){
+////                            String testName = doc.getString("test" + String.valueOf(i)+"_name");
+//                            String testName = "test"+String.valueOf(i);
+//                            testList.add(testName);
+//
+//                            TEST_IDs.add(doc.getString("test"+String.valueOf(i)+"_id"));
+//
+//                        }
+//                        loading.cancel();
+//                        Toast.makeText(MainActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
+//                    }
+//                    else{
+//                        loading.cancel();
+//                        Toast.makeText(MainActivity.this, "No tests yet",Toast.LENGTH_SHORT).show();
+//                        finish();
+//                    }
+//                }
+//                else{
+//                    loading.cancel();
+//                    Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//    }
 
 
     @Override
