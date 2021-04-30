@@ -31,7 +31,7 @@ import static com.example.quizapp.Creator_TestListActivity.test_id_list;
 public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
 
     private EditText question;
-    private TextInputLayout option1, option2, option3, option4, Answer;
+    private TextInputLayout option1, option2, option3, option4, Answer, points;
 
     private Button finish;
 
@@ -60,6 +60,8 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
         option3 = findViewById(R.id.option3);
         option4 = findViewById(R.id.option4);
         Answer = findViewById(R.id.Answer);
+
+        points = findViewById(R.id.points);
 
         finish = findViewById(R.id.finish);
 
@@ -123,7 +125,7 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
                     questionData.put("option3",option3.getEditText().getText().toString());
                     questionData.put("option4",option4.getEditText().getText().toString());
                     questionData.put("CorrectAnswer",Answer.getEditText().getText().toString());
-                    questionData.put("SelectedAnswer","0");
+                    questionData.put("Points",points.getEditText().getText().toString());
 
 
                     firestore.collection("tests").document(test_id_list.get(CurrentNumOfTest))

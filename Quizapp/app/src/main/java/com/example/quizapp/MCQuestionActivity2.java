@@ -18,15 +18,19 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.jar.Attributes;
 
+import static com.example.quizapp.UserProfileActivity.Current_user_name;
 import static com.example.quizapp.UserProfileActivity.TEST_IDs;
 
 //MC Questions is used as a base reference for all types of questions.
@@ -56,6 +60,13 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
 
     private int count;
 
+    public static ArrayList<Integer> MC_selected = new ArrayList<>();
+
+    private int worksheet_count;
+    private int worksheet_next;
+
+    private FirebaseAuth firebaseAuth;
+
 
 
 
@@ -73,6 +84,9 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
         if(temp != -1){
             NumOfTest = temp;
         }
+
+
+
 
 
         question = findViewById(R.id.question);
@@ -130,8 +144,6 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
                     if(doc.exists()){
                         count = Integer.valueOf(doc.getString("count"));
 
-
-
                         for(int i = 1; i <= count; i++){
                             MC_IDs.add(doc.getString("question"+String.valueOf(i)+"_id"));
                         }
@@ -181,8 +193,7 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
                             quesDoc.getString("option2"),
                             quesDoc.getString("option3"),
                             quesDoc.getString("option4"),
-                            Integer.valueOf(quesDoc.getString("CorrectAnswer")),
-                            Integer.valueOf(quesDoc.getString("SelectedAnswer"))));
+                            Integer.valueOf(quesDoc.getString("CorrectAnswer"))));
                 }
 
 
@@ -226,18 +237,27 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
         option3.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
         option4.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
 
-        if(questionList.get(current_question).getSelectedAnswer() ==1){
-            option1.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+
+
+        MC_selected.add(0);
+
+
+        if(MC_selected.size() > 0){//means we have done this question before.
+            if(MC_selected.get(current_question) == 1){
+                option1.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+            }
+            else if(MC_selected.get(current_question)== 2){
+                option2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+            }
+            else if(MC_selected.get(current_question) == 3){
+                option3.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+            }
+            else if (MC_selected.get(current_question) == 4){
+                option4.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+            }
         }
-        else if(questionList.get(current_question).getSelectedAnswer() ==2){
-            option2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
-        }
-        else if(questionList.get(current_question).getSelectedAnswer() ==3){
-            option3.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
-        }
-        else if (questionList.get(current_question).getSelectedAnswer() ==4){
-            option4.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
-        }
+
+
 
         loading.cancel();
 
@@ -249,7 +269,8 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
 
         if (v.getId() == R.id.option1){
-            questionList.get(current_question).setSelectedAnswer(1);
+//            questionList.get(current_question).setSelectedAnswer(1);
+            MC_selected.set(current_question,1);
 
             option1.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
             option2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
@@ -257,7 +278,8 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
             option4.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
         }
         else if (v.getId() == R.id.option2){
-            questionList.get(current_question).setSelectedAnswer(2);
+//            questionList.get(current_question).setSelectedAnswer(2);
+            MC_selected.set(current_question,2);
 
             option1.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
             option2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
@@ -265,7 +287,8 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
             option4.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
         }
         else if(v.getId() == R.id.option3){
-            questionList.get(current_question).setSelectedAnswer(3);
+//            questionList.get(current_question).setSelectedAnswer(3);
+            MC_selected.set(current_question,3);
 
             option1.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
             option2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
@@ -273,7 +296,8 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
             option4.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
         }
         else if(v.getId() == R.id.option4){
-            questionList.get(current_question).setSelectedAnswer(4);
+//            questionList.get(current_question).setSelectedAnswer(4);
+            MC_selected.set(current_question,4);
 
             option1.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
             option2.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
@@ -304,21 +328,11 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
 
         else{
 
+
+            CreateNewWorksheet();
+
+
             //upload selected answers to the database
-
-            Map<String , Object> Answers = new ArrayMap<>();
-
-            for(int i = 0; i < count; i++){
-                Answers.clear();
-                Answers.put("SelectedAnswer",String.valueOf(questionList.get(i).getSelectedAnswer()));
-
-                firestore.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("MCQuestions")
-                        .document(MC_IDs.get(i)).update(Answers);
-
-            }
-
-
-
 
 
             // go to free response activity
@@ -334,6 +348,73 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
             current_question --;
 
             setQuestion(current_question);
+
+        }
+    }
+
+
+    private void CreateNewWorksheet(){
+
+        firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                .collection("userWorksheets").document("worksheetList")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()) {
+                        worksheet_count = Integer.valueOf(doc.getString("count"));
+                        worksheet_next = Integer.valueOf(doc.getString("NEXT"));
+
+                    }
+
+
+                    Map<String, Object> worksheetData = new ArrayMap<>();
+
+                    worksheetData.put("NAME",Current_user_name);
+
+                    firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                            .collection("userWorksheets").document("worksheet"+String.valueOf(worksheet_next))
+                            .set(worksheetData);
+
+
+                    Map<String, Object> newWorksheetData = new ArrayMap<>();
+                    newWorksheetData.put("count", String.valueOf(worksheet_count + 1));
+                    newWorksheetData.put("NEXT", String.valueOf(worksheet_next + 1));
+
+                    firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                            .collection("userWorksheets").document("worksheetList").update(newWorksheetData);
+
+
+                    upload();
+
+                }
+            }
+        });
+
+
+
+
+
+
+
+
+    }
+
+    private void upload(){
+        Map<String , Object> Answers = new ArrayMap<>();
+
+        for(int i = 0; i < count; i++){
+            Answers.clear();
+            Answers.put("selected",String.valueOf(MC_selected.get(i)));
+
+//                firestore.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("MCQuestions")
+//                        .document(MC_IDs.get(i)).update(Answers);
+
+            firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                    .collection("userWorksheets").document("worksheet"+String.valueOf(worksheet_next))
+                    .collection("MCQuestions").document("question"+String.valueOf(i + 1))
+                    .set(Answers);
 
         }
     }

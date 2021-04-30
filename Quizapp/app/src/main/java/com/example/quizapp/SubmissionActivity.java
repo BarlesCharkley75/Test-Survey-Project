@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import static com.example.quizapp.MCQuestionActivity2.MC_selected;
+
 public class SubmissionActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Button submisison, GoPrev;
@@ -22,6 +24,8 @@ public class SubmissionActivity extends AppCompatActivity implements View.OnClic
 
         submisison.setOnClickListener(this);
         GoPrev.setOnClickListener(this);
+
+        MC_selected.clear();
     }
 
     @Override

@@ -10,16 +10,16 @@ public class MCQuestion {
     String option4;
 
     int CorrectAnswer;
-    int SelectedAnswer;
 
-    public MCQuestion(String question, String option1, String option2, String option3, String option4, int correctAnswer, int SelectedAnswer) {
+
+    public MCQuestion(String question, String option1, String option2, String option3, String option4, int correctAnswer) {
         this.question = question;
         this.option1 = option1;
         this.option2 = option2;
         this.option3 = option3;
         this.option4 = option4;
-        CorrectAnswer = correctAnswer;
-        this.SelectedAnswer = SelectedAnswer;
+        this.CorrectAnswer = correctAnswer;
+
     }
 
 
@@ -71,11 +71,5 @@ public class MCQuestion {
         CorrectAnswer = correctAnswer;
     }
 
-    public int getSelectedAnswer(){
-        return SelectedAnswer;
-    }
 
-    public void setSelectedAnswer(int selectedAnswer){
-        SelectedAnswer = selectedAnswer;
-    }
 }
