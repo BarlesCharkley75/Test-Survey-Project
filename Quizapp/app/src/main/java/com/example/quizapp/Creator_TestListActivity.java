@@ -233,8 +233,33 @@ public class Creator_TestListActivity extends AppCompatActivity {
         Intent intent = new Intent(Creator_TestListActivity.this,Creator_CreateQuestionsActivity.class);
         intent.putExtra("NAME",-10);
         startActivity(intent);
+
+
+        createNewWorksheet();
     }
 
+    private void createNewWorksheet(){
+
+        Map<String, Object> name = new ArrayMap<>();
+
+        name.put("name", "test" + String.valueOf(next));
+
+        firestore.collection("TestWorksheet").document("test"+String.valueOf(next))
+                .set(name);
+
+
+
+        Map<String, Object> worksheetListData = new ArrayMap<>();
+
+        worksheetListData.put("count","0");
+        worksheetListData.put("NEXT","1");
+
+        firestore.collection("TestWorksheet").document("test"+String.valueOf(next))
+                .collection("userWorksheets").document("worksheetList").set(worksheetListData);
+
+
+
+    }
 
 
 }

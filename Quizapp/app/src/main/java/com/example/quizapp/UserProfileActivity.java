@@ -43,6 +43,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private Dialog loading;
 
+    public static String Current_user_name;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +62,7 @@ public class UserProfileActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
+        Current_user_name = firebaseUser.getDisplayName();
 
 
         if(firebaseUser != null){
