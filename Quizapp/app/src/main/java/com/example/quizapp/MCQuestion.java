@@ -10,15 +10,17 @@ public class MCQuestion {
     String option4;
 
     int CorrectAnswer;
+    int points;
 
 
-    public MCQuestion(String question, String option1, String option2, String option3, String option4, int correctAnswer) {
+    public MCQuestion(String question, String option1, String option2, String option3, String option4, int correctAnswer, int points) {
         this.question = question;
         this.option1 = option1;
         this.option2 = option2;
         this.option3 = option3;
         this.option4 = option4;
         this.CorrectAnswer = correctAnswer;
+        this.points = points;
 
     }
 
@@ -29,6 +31,14 @@ public class MCQuestion {
 
     public void setQuestion(String question) {
         this.question = question;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 
     public String getOption1() {

@@ -39,6 +39,8 @@ public class Creator_CreateMatchingQuestionActivity extends AppCompatActivity {
 
     private TextInputLayout AnswerL1, AnswerL2, AnswerL3, AnswerL4;
 
+    private TextInputLayout points;
+
     private Button finish;
 
     private int count = 0;
@@ -79,6 +81,8 @@ public class Creator_CreateMatchingQuestionActivity extends AppCompatActivity {
         AnswerL2 = findViewById(R.id.AnswerL2);
         AnswerL3 = findViewById(R.id.AnswerL3);
         AnswerL4 = findViewById(R.id.AnswerL4);
+
+        points = findViewById(R.id.Points);
 
 
         finish = findViewById(R.id.finish);
@@ -139,10 +143,9 @@ public class Creator_CreateMatchingQuestionActivity extends AppCompatActivity {
                     questionData.put("L3_Answer",AnswerL3.getEditText().getText().toString());
                     questionData.put("L4_Answer",AnswerL4.getEditText().getText().toString());
 
-                    questionData.put("L1_selected","0");
-                    questionData.put("L2_selected","0");
-                    questionData.put("L3_selected","0");
-                    questionData.put("L4_selected","0");
+                    questionData.put("Points",points.getEditText().getText().toString());
+
+
 
 
                     firestore.collection("tests").document(test_id_list.get(CurrentNumOfTest))
@@ -189,10 +192,9 @@ public class Creator_CreateMatchingQuestionActivity extends AppCompatActivity {
                     questionData.put("L3_Answer",AnswerL3.getEditText().getText().toString());
                     questionData.put("L4_Answer",AnswerL4.getEditText().getText().toString());
 
-                    questionData.put("L1_selected","0");
-                    questionData.put("L2_selected","0");
-                    questionData.put("L3_selected","0");
-                    questionData.put("L4_selected","0");
+                    questionData.put("Points",points.getEditText().getText().toString());
+
+
 
 
                     firestore.collection("tests").document(test_id_list.get(CurrentNumOfTest))
@@ -256,6 +258,8 @@ public class Creator_CreateMatchingQuestionActivity extends AppCompatActivity {
                                                     String L3_Answer_text = doc.getString("L3_Answer");
                                                     String L4_Answer_text = doc.getString("L4_Answer");
 
+                                                    String points_text = doc.getString("Points");
+
 
 
                                                     question.setText(question_text);
@@ -272,6 +276,8 @@ public class Creator_CreateMatchingQuestionActivity extends AppCompatActivity {
                                                     AnswerL2.getEditText().setText(L2_Answer_text);
                                                     AnswerL3.getEditText().setText(L3_Answer_text);
                                                     AnswerL4.getEditText().setText(L4_Answer_text);
+
+                                                    points.getEditText().setText(points_text);
 
                                                 }
                                             }

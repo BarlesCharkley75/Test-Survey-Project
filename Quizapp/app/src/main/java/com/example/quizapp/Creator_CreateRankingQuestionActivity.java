@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,6 +34,7 @@ public class Creator_CreateRankingQuestionActivity extends AppCompatActivity {
     private EditText question;
     private TextInputLayout option1, option2, option3, option4;
     private TextInputLayout Answer1, Answer2, Answer3, Answer4;
+    private TextInputLayout points;
     private Button finish;
 
     private int count = 0;
@@ -66,6 +68,8 @@ public class Creator_CreateRankingQuestionActivity extends AppCompatActivity {
         Answer2 = findViewById(R.id.Answer2);
         Answer3 = findViewById(R.id.Answer3);
         Answer4 = findViewById(R.id.Answer4);
+
+        points = findViewById(R.id.Points);
 
         finish = findViewById(R.id.finish);
 
@@ -120,10 +124,8 @@ public class Creator_CreateRankingQuestionActivity extends AppCompatActivity {
                     questionData.put("Answer3", Answer3.getEditText().getText().toString());
                     questionData.put("Answer4", Answer4.getEditText().getText().toString());
 
-                    questionData.put("user_input1", "null");
-                    questionData.put("user_input2", "null");
-                    questionData.put("user_input3", "null");
-                    questionData.put("user_input4", "null");
+                    questionData.put("Points", points.getEditText().getText().toString());
+
 
                     firestore.collection("tests").document(test_id_list.get(CurrentNumOfTest))
                             .collection("RankingQuestions").document("question"+String.valueOf(next)).set(questionData)
@@ -167,10 +169,9 @@ public class Creator_CreateRankingQuestionActivity extends AppCompatActivity {
                     questionData.put("Answer3", Answer3.getEditText().getText().toString());
                     questionData.put("Answer4", Answer4.getEditText().getText().toString());
 
-                    questionData.put("user_input1", "null");
-                    questionData.put("user_input2", "null");
-                    questionData.put("user_input3", "null");
-                    questionData.put("user_input4", "null");
+                    questionData.put("Points",points.getEditText().getText().toString());
+
+
 
                     firestore.collection("tests").document(test_id_list.get(CurrentNumOfTest))
                             .collection("RankingQuestions").document(Ranking_id_list.get(NumOfQuestion - 1)).update(questionData)
@@ -226,6 +227,8 @@ public class Creator_CreateRankingQuestionActivity extends AppCompatActivity {
                                                     String Answer3_text = doc.getString("Answer3");
                                                     String Answer4_text = doc.getString("Answer4");
 
+                                                    String points_text = doc.getString("Points");
+
 
 
                                                     question.setText(question_text);
@@ -238,6 +241,8 @@ public class Creator_CreateRankingQuestionActivity extends AppCompatActivity {
                                                     Answer2.getEditText().setText(Answer2_text);
                                                     Answer3.getEditText().setText(Answer3_text);
                                                     Answer4.getEditText().setText(Answer4_text);
+
+                                                    points.getEditText().setText(points_text);
 
 
 

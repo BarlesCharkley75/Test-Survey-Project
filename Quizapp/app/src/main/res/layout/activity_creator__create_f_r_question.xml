@@ -50,11 +50,29 @@
             </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/points"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/deep_blue"
+            android:layout_marginTop="40dp"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="points"
+                android:layout_marginTop="40dp">
+
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
         <Button
             android:id="@+id/finish"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginTop="330dp"
+            android:layout_marginTop="220dp"
             android:text="Finish"
             android:textSize="20dp">
 

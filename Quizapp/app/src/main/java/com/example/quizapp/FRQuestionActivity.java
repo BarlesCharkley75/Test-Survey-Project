@@ -31,6 +31,12 @@ import java.util.Map;
 
 import static com.example.quizapp.MCQuestionActivity2.NumOfTest;
 
+import static com.example.quizapp.MCQuestionActivity2.NumOfWorksheet;
+import static com.example.quizapp.MCQuestionActivity2.newWorksheet;
+import static com.example.quizapp.MCQuestionActivity2.worksheet_count;
+import static com.example.quizapp.MCQuestionActivity2.worksheet_names;
+import static com.example.quizapp.MCQuestionActivity2.worksheet_next;
+import static com.example.quizapp.UserProfileActivity.Current_user_name;
 import static com.example.quizapp.UserProfileActivity.TEST_IDs;
 
 
@@ -49,13 +55,16 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
 
     private int info = 0;
 
-    private FirebaseFirestore firestore2;
+    private FirebaseFirestore firestore;
 
     public static ArrayList<String> FR_IDs;
 
     private Dialog loading;
 
     private int count;
+
+    public static ArrayList<String> FR_Answers = new ArrayList<>();
+
 
 
 
@@ -81,7 +90,7 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
         GoNext.setOnClickListener(this);
         GoPrev.setOnClickListener(this);
 
-        firestore2 = FirebaseFirestore.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
         questionList = new ArrayList<>();
         FR_IDs = new ArrayList<>();
@@ -105,7 +114,7 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
 
         FR_IDs.clear();
 
-        firestore2.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("FRQuestions")
+        firestore.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("FRQuestions")
                 .document("questionList").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -144,7 +153,7 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
 
 
     private void setQuestionList(){
-        firestore2.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("FRQuestions")
+        firestore.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("FRQuestions")
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -162,8 +171,8 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
                     QueryDocumentSnapshot quesDoc = docList.get(FR_IDs.get(i));
 
                     questionList.add(new FRQuestion(quesDoc.getString("question"),
-                            quesDoc.getString("UserAnswer"),
-                            Integer.valueOf(quesDoc.getString("WordLimit"))));
+                            Integer.valueOf(quesDoc.getString("WordLimit")),
+                            Integer.valueOf(quesDoc.getString("Points"))));
                 }
 
 
@@ -191,10 +200,12 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
 
 
         if(limit > 0){
-            question.setText(questionList.get(i).getQuestion() + " (Length limit: " + String.valueOf(limit)+")");
+            question.setText(questionList.get(i).getQuestion() + " (Length limit: " + String.valueOf(limit)+")"
+                    +"\n"+" \n"+"(points: " + questionList.get(i).getPoints() + ")");
         }
         else{
-            question.setText(questionList.get(i).getQuestion() + " (No length limit)");
+            question.setText(questionList.get(i).getQuestion() + " (No length limit)"
+                    +"\n"+" \n"+"(points: " + questionList.get(i).getPoints() + ")");
         }
 
         q_count.setText(String.valueOf(i + 1) + "/" + String.valueOf(questionList.size()));
@@ -209,12 +220,19 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
             user_input.setFilters(new InputFilter[]{});
         }
 
-        if(!questionList.get(i).getUser_answer().equals("null")){
-            user_input.setText(questionList.get(i).getUser_answer());
+
+        FR_Answers.add("null");
+
+        if(FR_Answers.size()>0){//means we have dones this question before
+            if(!FR_Answers.get((current_question)).equals("null")){
+                user_input.setText(FR_Answers.get(current_question));
+            }
+            else{
+                user_input.getText().clear();
+            }
         }
-        else{
-            user_input.getText().clear();
-        }
+
+
 
         loading.cancel();
 
@@ -225,13 +243,15 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
 
         if(v.getId() == R.id.GoNext){
-            questionList.get(current_question).setUser_answer(user_input.getText().toString());
+//            questionList.get(current_question).setUser_answer(user_input.getText().toString());
+            FR_Answers.set(current_question,user_input.getText().toString());
             changeQuestionForward();
         }
 
 
         if(v.getId() == R.id.GoPrev){
-            questionList.get(current_question).setUser_answer(user_input.getText().toString());
+//            questionList.get(current_question).setUser_answer(user_input.getText().toString());
+            FR_Answers.set(current_question,user_input.getText().toString());
             changeQuestionBackward();
         }
 
@@ -241,17 +261,51 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
         if(current_question >= questionList.size()-1){
 
 
-            //upload answers
-            Map<String , Object> Answers = new ArrayMap<>();
+//            //upload answers
+//            Map<String , Object> Answers = new ArrayMap<>();
+//
+//            for(int i = 0; i < count; i++){
+//                Answers.clear();
+//                Answers.put("UserAnswer",String.valueOf(questionList.get(i).getUser_answer()));
+//
+//                firestore2.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("FRQuestions")
+//                        .document(FR_IDs.get(i)).update(Answers);
+//
+//            }
 
-            for(int i = 0; i < count; i++){
-                Answers.clear();
-                Answers.put("UserAnswer",String.valueOf(questionList.get(i).getUser_answer()));
 
-                firestore2.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("FRQuestions")
-                        .document(FR_IDs.get(i)).update(Answers);
+            firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                    .collection("userWorksheets").document("worksheetList")
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if(task.isSuccessful()){
+                        DocumentSnapshot doc = task.getResult();
+                        if(doc.exists()){
+                            worksheet_count = Integer.valueOf(doc.getString("count"));
 
-            }
+                            for(int i = 1; i <= worksheet_count; i++){
+                                worksheet_names.add(doc.getString("worksheet"+String.valueOf(i)+"_name"));
+                            }
+
+                            for (int i = 0; i < worksheet_names.size(); i++){
+                                if(Current_user_name.equals(worksheet_names.get(i))){
+                                    newWorksheet = false;
+                                }
+                            }
+
+                            if(worksheet_names.size() == 0 || newWorksheet == true){
+                                CreateNewWorksheet();
+                            }
+                            else if(newWorksheet == false && worksheet_names.size()>0){
+                                update();
+                            }
+
+
+                        }
+                    }
+                }
+            });
 
 
             //go to next activity
@@ -284,6 +338,98 @@ public class FRQuestionActivity extends AppCompatActivity implements View.OnClic
 
             setQuestion(current_question);
         }
+    }
+
+
+    private void CreateNewWorksheet(){
+
+        firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                .collection("userWorksheets").document("worksheetList")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()) {
+                        worksheet_count = Integer.valueOf(doc.getString("count"));
+                        worksheet_next = Integer.valueOf(doc.getString("NEXT"));
+
+                    }
+
+
+                    Map<String, Object> worksheetData = new ArrayMap<>();
+
+                    worksheetData.put("NAME",Current_user_name);
+
+                    firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                            .collection("userWorksheets").document("worksheet"+String.valueOf(worksheet_next))
+                            .set(worksheetData);
+
+
+                    Map<String, Object> newWorksheetData = new ArrayMap<>();
+                    newWorksheetData.put("count", String.valueOf(worksheet_count + 1));
+                    newWorksheetData.put("NEXT", String.valueOf(worksheet_next + 1));
+                    newWorksheetData.put("worksheet"+String.valueOf(worksheet_next)+"_name",Current_user_name);
+
+                    firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                            .collection("userWorksheets").document("worksheetList").update(newWorksheetData);
+
+
+                    upload();
+
+                }
+            }
+        });
+
+
+    }
+
+    private void upload(){
+        Map<String , Object> Answers = new ArrayMap<>();
+
+        for(int i = 0; i < count; i++){
+            Answers.clear();
+            Answers.put("User_input",String.valueOf(FR_Answers.get(i)));
+
+//                firestore.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("MCQuestions")
+//                        .document(MC_IDs.get(i)).update(Answers);
+
+            firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                    .collection("userWorksheets").document("worksheet"+String.valueOf(worksheet_next))
+                    .collection("FRQuestions").document("question"+String.valueOf(i + 1))
+                    .set(Answers);
+
+        }
+    }
+
+
+    private void update(){
+
+
+        for(int i = 0; i< worksheet_names.size(); i++){
+            if(Current_user_name.equals(worksheet_names.get(i))){
+                NumOfWorksheet = i;
+
+                Map<String , Object> Answers = new ArrayMap<>();
+
+                for(int j = 0; j < count; j++){
+                    Answers.clear();
+                    Answers.put("User_input",String.valueOf(FR_Answers.get(j)));
+
+//                firestore.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("MCQuestions")
+//                        .document(MC_IDs.get(i)).update(Answers);
+
+                    firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                            .collection("userWorksheets").document("worksheet"+String.valueOf(NumOfWorksheet + 1))
+                            .collection("FRQuestions").document("question"+String.valueOf(j + 1))
+                            .set(Answers);
+
+                }
+            }
+
+
+        }
+
     }
 
 }

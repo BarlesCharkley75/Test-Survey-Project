@@ -74,6 +74,7 @@
             android:layout_gravity="center"
             android:background="@color/white"
             android:orientation="horizontal"
+            android:layout_marginTop="10dp"
             >
 
             <Button

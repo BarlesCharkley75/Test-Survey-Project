@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import static com.example.quizapp.FRQuestionActivity.FR_Answers;
 import static com.example.quizapp.MCQuestionActivity2.MC_selected;
 
 public class SubmissionActivity extends AppCompatActivity implements View.OnClickListener{
@@ -26,6 +27,7 @@ public class SubmissionActivity extends AppCompatActivity implements View.OnClic
         GoPrev.setOnClickListener(this);
 
         MC_selected.clear();
+        FR_Answers.clear();
     }
 
     @Override

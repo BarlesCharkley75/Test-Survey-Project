@@ -167,7 +167,7 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
                     questionData.put("option3", option3.getEditText().getText().toString());
                     questionData.put("option4", option4.getEditText().getText().toString());
                     questionData.put("CorrectAnswer", Answer.getEditText().getText().toString());
-                    questionData.put("SelectedAnswer","0");
+
 
                     firestore.collection("tests").document(test_id_list.get(CurrentNumOfTest))
                             .collection("MCQuestions").document(MC_id_list.get(NumOfQuestion - 1)).update(questionData)
@@ -217,6 +217,7 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
                                                     String option3_text = doc.getString("option3");
                                                     String option4_text = doc.getString("option4");
                                                     String CorrectAnswer_text = doc.getString("CorrectAnswer");
+                                                    String points_text = doc.getString("Points");
 
                                                     question.setText(question_text);
                                                     option1.getEditText().setText(option1_text);
@@ -224,6 +225,8 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
                                                     option3.getEditText().setText(option3_text);
                                                     option4.getEditText().setText(option4_text);
                                                     Answer.getEditText().setText(CorrectAnswer_text);
+                                                    points.getEditText().setText(points_text);
+
 
                                                 }
                                             }

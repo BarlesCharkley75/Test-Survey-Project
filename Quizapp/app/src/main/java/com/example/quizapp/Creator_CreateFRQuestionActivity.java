@@ -31,7 +31,7 @@ import static com.example.quizapp.Creator_TestListActivity.test_id_list;
 public class Creator_CreateFRQuestionActivity extends AppCompatActivity {
 
     private EditText question;
-    private TextInputLayout word_limit;
+    private TextInputLayout word_limit, points;
     private Button finish;
 
     private int count = 0;
@@ -55,6 +55,7 @@ public class Creator_CreateFRQuestionActivity extends AppCompatActivity {
 
         question = findViewById(R.id.question);
         word_limit = findViewById(R.id.WordLimit);
+        points = findViewById(R.id.points);
         finish = findViewById(R.id.finish);
 
         firestore = FirebaseFirestore.getInstance();
@@ -100,7 +101,7 @@ public class Creator_CreateFRQuestionActivity extends AppCompatActivity {
                     Map<String,Object> questionData = new ArrayMap<>();
 
                     questionData.put("question", question.getText().toString());
-                    questionData.put("UserAnswer","null");
+                    questionData.put("Points",points.getEditText().getText().toString());
 
                     String limit = word_limit.getEditText().getText().toString();
                     if(limit.equals("")){
@@ -199,6 +200,7 @@ public class Creator_CreateFRQuestionActivity extends AppCompatActivity {
                                                 DocumentSnapshot doc = task.getResult();
                                                 if(doc.exists()){
                                                     String question_text = doc.getString("question");
+                                                    String points_text = doc.getString("Points");
 
                                                     question.setText(question_text);
 
@@ -210,6 +212,10 @@ public class Creator_CreateFRQuestionActivity extends AppCompatActivity {
                                                     else{
                                                         word_limit.getEditText().setText(limit);
                                                     }
+
+                                                    points.getEditText().setText(points_text);
+
+
 
 
 
