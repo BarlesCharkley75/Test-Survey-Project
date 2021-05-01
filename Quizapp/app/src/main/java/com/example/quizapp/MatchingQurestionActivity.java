@@ -27,6 +27,12 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static com.example.quizapp.MCQuestionActivity2.NumOfTest;
+import static com.example.quizapp.MCQuestionActivity2.NumOfWorksheet;
+import static com.example.quizapp.MCQuestionActivity2.newWorksheet;
+import static com.example.quizapp.MCQuestionActivity2.worksheet_count;
+import static com.example.quizapp.MCQuestionActivity2.worksheet_names;
+import static com.example.quizapp.MCQuestionActivity2.worksheet_next;
+import static com.example.quizapp.UserProfileActivity.Current_user_name;
 import static com.example.quizapp.UserProfileActivity.TEST_IDs;
 
 public class MatchingQurestionActivity extends AppCompatActivity implements View.OnClickListener {
@@ -48,6 +54,8 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
     private FirebaseFirestore firestore;
     
     public static ArrayList<String> MATCHING_IDs;
+
+    public static ArrayList<MatchingAnswers> MATCHING_Answers = new ArrayList<>();
     private Dialog loading;
 
     private int count;
@@ -187,10 +195,7 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
                             Integer.valueOf(quesDoc.getString("L2_Answer")),
                             Integer.valueOf(quesDoc.getString("L3_Answer")),
                             Integer.valueOf(quesDoc.getString("L4_Answer")),
-                            Integer.valueOf(quesDoc.getString("L1_selected")),
-                            Integer.valueOf(quesDoc.getString("L2_selected")),
-                            Integer.valueOf(quesDoc.getString("L3_selected")),
-                            Integer.valueOf(quesDoc.getString("L4_selected"))));
+                            Integer.valueOf(quesDoc.getString("Points"))));
                 }
 
 
@@ -213,7 +218,7 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
     }
 
     private void setQuestion(int i){
-        question.setText(questionList.get(i).getQuestion());
+        question.setText(questionList.get(i).getQuestion()+"\n"+" \n"+"(points: " + questionList.get(i).getPoints() + ")");
         q_count.setText(String.valueOf(i + 1) + "/" + String.valueOf(questionList.size()));
 
         option1_L.setText(questionList.get(i).getL1());
@@ -236,69 +241,76 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
         option3_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
         option4_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
 
-        if(questionList.get(current_question).getL1_selected() != 0){
-            option1_L.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
-            if(questionList.get(current_question).getL1_selected() == 1){
-                option1_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+
+        MATCHING_Answers.add(new MatchingAnswers(0,0,0,0));
+
+        if(MATCHING_Answers.size()>0){//means we have already done the problems before
+            if(MATCHING_Answers.get(current_question).getL1_selected() != 0){
+                option1_L.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+                if(MATCHING_Answers.get(current_question).getL1_selected() == 1){
+                    option1_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+                }
+                else if(MATCHING_Answers.get(current_question).getL1_selected() == 2){
+                    option2_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+                }
+                else if(MATCHING_Answers.get(current_question).getL1_selected() == 3){
+                    option3_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+                }
+                else if(MATCHING_Answers.get(current_question).getL1_selected() == 4){
+                    option4_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+                }
             }
-            else if(questionList.get(current_question).getL1_selected() == 2){
-                option2_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+
+            if(MATCHING_Answers.get(current_question).getL2_selected() != 0){
+                option2_L.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffdbe4")));
+                if(MATCHING_Answers.get(current_question).getL2_selected() == 1){
+                    option1_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffdbe4")));
+                }
+                else if(MATCHING_Answers.get(current_question).getL2_selected() == 2){
+                    option2_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffdbe4")));
+                }
+                else if(MATCHING_Answers.get(current_question).getL2_selected() == 3){
+                    option3_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffdbe4")));
+                }
+                else if(MATCHING_Answers.get(current_question).getL2_selected() == 4){
+                    option4_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffdbe4")));
+                }
             }
-            else if(questionList.get(current_question).getL1_selected() == 3){
-                option3_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+
+            if(MATCHING_Answers.get(current_question).getL3_selected() != 0){
+                option3_L.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#91e5ff")));
+                if(MATCHING_Answers.get(current_question).getL3_selected() == 1){
+                    option1_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#91e5ff")));
+                }
+                else if(MATCHING_Answers.get(current_question).getL3_selected() == 2){
+                    option2_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#91e5ff")));
+                }
+                else if(MATCHING_Answers.get(current_question).getL3_selected() == 3){
+                    option3_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#91e5ff")));
+                }
+                else if(MATCHING_Answers.get(current_question).getL3_selected() == 4){
+                    option4_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#91e5ff")));
+                }
             }
-            else if(questionList.get(current_question).getL1_selected() == 4){
-                option4_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
+
+            if(MATCHING_Answers.get(current_question).getL4_selected() != 0){
+                option4_L.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffff97")));
+                if(MATCHING_Answers.get(current_question).getL4_selected() == 1){
+                    option1_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffff97")));
+                }
+                else if(MATCHING_Answers.get(current_question).getL4_selected() == 2){
+                    option2_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffff97")));
+                }
+                else if(MATCHING_Answers.get(current_question).getL4_selected() == 3){
+                    option3_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffff97")));
+                }
+                else if(MATCHING_Answers.get(current_question).getL4_selected() == 4){
+                    option4_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffff97")));
+                }
             }
+
         }
 
-        if(questionList.get(current_question).getL2_selected() != 0){
-            option2_L.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffdbe4")));
-            if(questionList.get(current_question).getL2_selected() == 1){
-                option1_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffdbe4")));
-            }
-            else if(questionList.get(current_question).getL2_selected() == 2){
-                option2_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffdbe4")));
-            }
-            else if(questionList.get(current_question).getL2_selected() == 3){
-                option3_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffdbe4")));
-            }
-            else if(questionList.get(current_question).getL2_selected() == 4){
-                option4_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffdbe4")));
-            }
-        }
-
-        if(questionList.get(current_question).getL3_selected() != 0){
-            option3_L.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#91e5ff")));
-            if(questionList.get(current_question).getL3_selected() == 1){
-                option1_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#91e5ff")));
-            }
-            else if(questionList.get(current_question).getL3_selected() == 2){
-                option2_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#91e5ff")));
-            }
-            else if(questionList.get(current_question).getL3_selected() == 3){
-                option3_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#91e5ff")));
-            }
-            else if(questionList.get(current_question).getL3_selected() == 4){
-                option4_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#91e5ff")));
-            }
-        }
-
-        if(questionList.get(current_question).getL4_selected() != 0){
-            option4_L.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffff97")));
-            if(questionList.get(current_question).getL4_selected() == 1){
-                option1_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffff97")));
-            }
-            else if(questionList.get(current_question).getL4_selected() == 2){
-                option2_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffff97")));
-            }
-            else if(questionList.get(current_question).getL4_selected() == 3){
-                option3_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffff97")));
-            }
-            else if(questionList.get(current_question).getL4_selected() == 4){
-                option4_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffff97")));
-            }
-        }
         loading.cancel();
 
     }
@@ -330,95 +342,95 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
 
 
         if(pair_order == 1){
-            if(v.getId() == R.id.option_R1 && questionList.get(current_question).getL1_selected() == 0){
+            if(v.getId() == R.id.option_R1 && MATCHING_Answers.get(current_question).getL1_selected() == 0){
                 option1_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
-                questionList.get(current_question).setL1_selected(1);
+                MATCHING_Answers.get(current_question).setL1_selected(1);
             }
-            if(v.getId() == R.id.option_R2 && questionList.get(current_question).getL1_selected() == 0){
+            if(v.getId() == R.id.option_R2 && MATCHING_Answers.get(current_question).getL1_selected() == 0){
                 option2_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
-                questionList.get(current_question).setL1_selected(2);
+                MATCHING_Answers.get(current_question).setL1_selected(2);
             }
-            if(v.getId() == R.id.option_R3 && questionList.get(current_question).getL1_selected() == 0){
+            if(v.getId() == R.id.option_R3 && MATCHING_Answers.get(current_question).getL1_selected() == 0){
                 option3_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
-                questionList.get(current_question).setL1_selected(3);
+                MATCHING_Answers.get(current_question).setL1_selected(3);
             }
 
-            if (v.getId() == R.id.option_R4 && questionList.get(current_question).getL1_selected() == 0){
+            if (v.getId() == R.id.option_R4 && MATCHING_Answers.get(current_question).getL1_selected() == 0){
                 option4_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#40ff40")));
-                questionList.get(current_question).setL1_selected(4);
+                MATCHING_Answers.get(current_question).setL1_selected(4);
             }
 
         }
 
         if(pair_order == 2){
-            if(v.getId() == R.id.option_R1 && questionList.get(current_question).getL2_selected() == 0){
+            if(v.getId() == R.id.option_R1 && MATCHING_Answers.get(current_question).getL2_selected() == 0){
                 option1_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffdbe4")));
-                questionList.get(current_question).setL2_selected(1);
+                MATCHING_Answers.get(current_question).setL2_selected(1);
             }
-            if(v.getId() == R.id.option_R2 && questionList.get(current_question).getL2_selected() == 0){
+            if(v.getId() == R.id.option_R2 && MATCHING_Answers.get(current_question).getL2_selected() == 0){
                 option2_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffdbe4")));
-                questionList.get(current_question).setL2_selected(2);
+                MATCHING_Answers.get(current_question).setL2_selected(2);
             }
-            if(v.getId() == R.id.option_R3 && questionList.get(current_question).getL2_selected() == 0 ){
+            if(v.getId() == R.id.option_R3 && MATCHING_Answers.get(current_question).getL2_selected() == 0 ){
                 option3_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffdbe4")));
-                questionList.get(current_question).setL2_selected(3);
+                MATCHING_Answers.get(current_question).setL2_selected(3);
             }
 
-            if (v.getId() == R.id.option_R4 && questionList.get(current_question).getL2_selected() == 0){
+            if (v.getId() == R.id.option_R4 && MATCHING_Answers.get(current_question).getL2_selected() == 0){
                 option4_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffdbe4")));
-                questionList.get(current_question).setL2_selected(4);
+                MATCHING_Answers.get(current_question).setL2_selected(4);
 
             }
 
         }
 
         if(pair_order == 3){
-            if(v.getId() == R.id.option_R1 && questionList.get(current_question).getL3_selected() == 0){
+            if(v.getId() == R.id.option_R1 && MATCHING_Answers.get(current_question).getL3_selected() == 0){
                 option1_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#91e5ff")));
-                questionList.get(current_question).setL3_selected(1);
+                MATCHING_Answers.get(current_question).setL3_selected(1);
             }
-            if(v.getId() == R.id.option_R2 && questionList.get(current_question).getL3_selected() == 0){
+            if(v.getId() == R.id.option_R2 && MATCHING_Answers.get(current_question).getL3_selected() == 0){
                 option2_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#91e5ff")));
-                questionList.get(current_question).setL3_selected(2);
+                MATCHING_Answers.get(current_question).setL3_selected(2);
             }
-            if(v.getId() == R.id.option_R3 && questionList.get(current_question).getL3_selected() == 0){
+            if(v.getId() == R.id.option_R3 && MATCHING_Answers.get(current_question).getL3_selected() == 0){
                 option3_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#91e5ff")));
-                questionList.get(current_question).setL3_selected(3);
+                MATCHING_Answers.get(current_question).setL3_selected(3);
             }
 
-            if (v.getId() == R.id.option_R4 && questionList.get(current_question).getL3_selected() == 0){
+            if (v.getId() == R.id.option_R4 && MATCHING_Answers.get(current_question).getL3_selected() == 0){
                 option4_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#91e5ff")));
-                questionList.get(current_question).setL3_selected(4);
+                MATCHING_Answers.get(current_question).setL3_selected(4);
             }
 
         }
 
         if(pair_order == 4){
-            if(v.getId() == R.id.option_R1 && questionList.get(current_question).getL4_selected() == 0){
+            if(v.getId() == R.id.option_R1 && MATCHING_Answers.get(current_question).getL4_selected() == 0){
                 option1_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffff97")));
-                questionList.get(current_question).setL4_selected(1);
+                MATCHING_Answers.get(current_question).setL4_selected(1);
             }
-            if(v.getId() == R.id.option_R2 && questionList.get(current_question).getL4_selected() == 0){
+            if(v.getId() == R.id.option_R2 && MATCHING_Answers.get(current_question).getL4_selected() == 0){
                 option2_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffff97")));
-                questionList.get(current_question).setL4_selected(2);
+                MATCHING_Answers.get(current_question).setL4_selected(2);
             }
-            if(v.getId() == R.id.option_R3 && questionList.get(current_question).getL4_selected() == 0){
+            if(v.getId() == R.id.option_R3 && MATCHING_Answers.get(current_question).getL4_selected() == 0){
                 option3_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffff97")));
-                questionList.get(current_question).setL4_selected(3);
+                MATCHING_Answers.get(current_question).setL4_selected(3);
             }
 
-            if (v.getId() == R.id.option_R4 && questionList.get(current_question).getL4_selected() == 0){
+            if (v.getId() == R.id.option_R4 && MATCHING_Answers.get(current_question).getL4_selected() == 0){
                 option4_R.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffff97")));
-                questionList.get(current_question).setL4_selected(4);
+                MATCHING_Answers.get(current_question).setL4_selected(4);
             }
 
         }
 
         if(v.getId() == R.id.Clear){
-            questionList.get(current_question).setL1_selected(0);
-            questionList.get(current_question).setL2_selected(0);
-            questionList.get(current_question).setL3_selected(0);
-            questionList.get(current_question).setL4_selected(0);
+            MATCHING_Answers.get(current_question).setL1_selected(0);
+            MATCHING_Answers.get(current_question).setL2_selected(0);
+            MATCHING_Answers.get(current_question).setL3_selected(0);
+            MATCHING_Answers.get(current_question).setL4_selected(0);
 
             option1_L.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
             option2_L.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#e9e9e9")));
@@ -444,19 +456,53 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
     private void changeQuestionForward(){
         if(current_question >= questionList.size()-1){
             //upload answers
-            Map<String , Object> Answers = new ArrayMap<>();
+//            Map<String , Object> Answers = new ArrayMap<>();
+//
+//            for(int i = 0; i < count; i++){
+//                Answers.clear();
+//                Answers.put("L1_selected",String.valueOf(questionList.get(i).getL1_selected()));
+//                Answers.put("L2_selected",String.valueOf(questionList.get(i).getL2_selected()));
+//                Answers.put("L3_selected",String.valueOf(questionList.get(i).getL3_selected()));
+//                Answers.put("L4_selected",String.valueOf(questionList.get(i).getL4_selected()));
+//
+//                firestore.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("MatchingQuestions")
+//                        .document(MATCHING_IDs.get(i)).update(Answers);
+//
+//            }
 
-            for(int i = 0; i < count; i++){
-                Answers.clear();
-                Answers.put("L1_selected",String.valueOf(questionList.get(i).getL1_selected()));
-                Answers.put("L2_selected",String.valueOf(questionList.get(i).getL2_selected()));
-                Answers.put("L3_selected",String.valueOf(questionList.get(i).getL3_selected()));
-                Answers.put("L4_selected",String.valueOf(questionList.get(i).getL4_selected()));
 
-                firestore.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("MatchingQuestions")
-                        .document(MATCHING_IDs.get(i)).update(Answers);
+            firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                    .collection("userWorksheets").document("worksheetList")
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if(task.isSuccessful()){
+                        DocumentSnapshot doc = task.getResult();
+                        if(doc.exists()){
+                            worksheet_count = Integer.valueOf(doc.getString("count"));
 
-            }
+                            for(int i = 1; i <= worksheet_count; i++){
+                                worksheet_names.add(doc.getString("worksheet"+String.valueOf(i)+"_name"));
+                            }
+
+                            for (int i = 0; i < worksheet_names.size(); i++){
+                                if(Current_user_name.equals(worksheet_names.get(i))){
+                                    newWorksheet = false;
+                                }
+                            }
+
+                            if(worksheet_names.size() == 0 || newWorksheet == true){
+                                CreateNewWorksheet();
+                            }
+                            else if(newWorksheet == false && worksheet_names.size()>0){
+                                update();
+                            }
+
+
+                        }
+                    }
+                }
+            });
 
 
             //go to next activity
@@ -487,4 +533,103 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
             setQuestion(current_question);
         }
     }
+
+
+    private void CreateNewWorksheet(){
+
+        firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                .collection("userWorksheets").document("worksheetList")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()) {
+                        worksheet_count = Integer.valueOf(doc.getString("count"));
+                        worksheet_next = Integer.valueOf(doc.getString("NEXT"));
+
+                    }
+
+
+                    Map<String, Object> worksheetData = new ArrayMap<>();
+
+                    worksheetData.put("NAME",Current_user_name);
+
+                    firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                            .collection("userWorksheets").document("worksheet"+String.valueOf(worksheet_next))
+                            .set(worksheetData);
+
+
+                    Map<String, Object> newWorksheetData = new ArrayMap<>();
+                    newWorksheetData.put("count", String.valueOf(worksheet_count + 1));
+                    newWorksheetData.put("NEXT", String.valueOf(worksheet_next + 1));
+                    newWorksheetData.put("worksheet"+String.valueOf(worksheet_next)+"_name",Current_user_name);
+
+                    firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                            .collection("userWorksheets").document("worksheetList").update(newWorksheetData);
+
+
+                    upload();
+
+                }
+            }
+        });
+
+
+    }
+
+    private void upload(){
+        Map<String , Object> Answers = new ArrayMap<>();
+
+        for(int i = 0; i < count; i++){
+            Answers.clear();
+            Answers.put("L1_selected",String.valueOf(MATCHING_Answers.get(current_question).getL1_selected()));
+            Answers.put("L2_selected",String.valueOf(MATCHING_Answers.get(current_question).getL2_selected()));
+            Answers.put("L3_selected",String.valueOf(MATCHING_Answers.get(current_question).getL3_selected()));
+            Answers.put("L4_selected",String.valueOf(MATCHING_Answers.get(current_question).getL4_selected()));
+
+
+//                firestore.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("MCQuestions")
+//                        .document(MC_IDs.get(i)).update(Answers);
+
+            firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                    .collection("userWorksheets").document("worksheet"+String.valueOf(worksheet_next))
+                    .collection("MatchingQuestions").document("question"+String.valueOf(i + 1))
+                    .set(Answers);
+
+        }
+    }
+
+    private void update(){
+
+
+        for(int i = 0; i< worksheet_names.size(); i++){
+            if(Current_user_name.equals(worksheet_names.get(i))){
+                NumOfWorksheet = i;
+
+                Map<String , Object> Answers = new ArrayMap<>();
+
+                for(int j = 0; j < count; j++){
+                    Answers.clear();
+                    Answers.put("L1_selected",String.valueOf(MATCHING_Answers.get(current_question).getL1_selected()));
+                    Answers.put("L2_selected",String.valueOf(MATCHING_Answers.get(current_question).getL2_selected()));
+                    Answers.put("L3_selected",String.valueOf(MATCHING_Answers.get(current_question).getL3_selected()));
+                    Answers.put("L4_selected",String.valueOf(MATCHING_Answers.get(current_question).getL4_selected()));
+
+//                firestore.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("MCQuestions")
+//                        .document(MC_IDs.get(i)).update(Answers);
+
+                    firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                            .collection("userWorksheets").document("worksheet"+String.valueOf(NumOfWorksheet + 1))
+                            .collection("MatchingQuestions").document("question"+String.valueOf(j + 1))
+                            .set(Answers);
+
+                }
+            }
+
+
+        }
+
+    }
+
 }

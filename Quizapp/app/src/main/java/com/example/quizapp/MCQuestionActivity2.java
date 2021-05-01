@@ -62,10 +62,16 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
 
     public static ArrayList<Integer> MC_selected = new ArrayList<>();
 
-    private int worksheet_count;
-    private int worksheet_next;
+    public static ArrayList<String> worksheet_names = new ArrayList<>();
+
+    public static int worksheet_count;
+    public static int worksheet_next;
 
     private FirebaseAuth firebaseAuth;
+
+    public static boolean newWorksheet = true;
+
+    public static int NumOfWorksheet;
 
 
 
@@ -193,7 +199,8 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
                             quesDoc.getString("option2"),
                             quesDoc.getString("option3"),
                             quesDoc.getString("option4"),
-                            Integer.valueOf(quesDoc.getString("CorrectAnswer"))));
+                            Integer.valueOf(quesDoc.getString("CorrectAnswer")),
+                            Integer.valueOf(quesDoc.getString("Points"))));
                 }
 
 
@@ -223,7 +230,7 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
     // and set it to green.
 
     private void setQuestion(int i){
-        question.setText(questionList.get(i).getQuestion());
+        question.setText(questionList.get(i).getQuestion()+"\n"+" \n"+"(points: " + questionList.get(i).getPoints() + ")");
 
         option1.setText(questionList.get(i).getOption1());
         option2.setText(questionList.get(i).getOption2());
@@ -328,11 +335,40 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
 
         else{
 
+            firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                    .collection("userWorksheets").document("worksheetList")
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if(task.isSuccessful()){
+                        DocumentSnapshot doc = task.getResult();
+                        if(doc.exists()){
+                            worksheet_count = Integer.valueOf(doc.getString("count"));
 
-            CreateNewWorksheet();
+                            for(int i = 1; i <= worksheet_count; i++){
+                                worksheet_names.add(doc.getString("worksheet"+String.valueOf(i)+"_name"));
+                            }
+
+                            for (int i = 0; i < worksheet_names.size(); i++){
+                                if(Current_user_name.equals(worksheet_names.get(i))){
+                                    newWorksheet = false;
+                                }
+                            }
+
+                            if(worksheet_names.size() == 0 || newWorksheet == true){
+                                CreateNewWorksheet();
+                            }
+                            else if(newWorksheet == false && worksheet_names.size()>0){
+                                update();
+                            }
 
 
-            //upload selected answers to the database
+                        }
+                    }
+                }
+            });
+
+
 
 
             // go to free response activity
@@ -381,6 +417,7 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
                     Map<String, Object> newWorksheetData = new ArrayMap<>();
                     newWorksheetData.put("count", String.valueOf(worksheet_count + 1));
                     newWorksheetData.put("NEXT", String.valueOf(worksheet_next + 1));
+                    newWorksheetData.put("worksheet"+String.valueOf(worksheet_next)+"_name",Current_user_name);
 
                     firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
                             .collection("userWorksheets").document("worksheetList").update(newWorksheetData);
@@ -391,12 +428,6 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
                 }
             }
         });
-
-
-
-
-
-
 
 
     }
@@ -417,5 +448,34 @@ public class MCQuestionActivity2 extends AppCompatActivity implements View.OnCli
                     .set(Answers);
 
         }
+    }
+
+    private void update(){
+
+
+        for(int i = 0; i< worksheet_names.size(); i++){
+            if(Current_user_name.equals(worksheet_names.get(i))){
+                NumOfWorksheet = i;
+
+                Map<String , Object> Answers = new ArrayMap<>();
+
+                for(int j = 0; j < count; j++){
+                    Answers.clear();
+                    Answers.put("selected",String.valueOf(MC_selected.get(j)));
+
+//                firestore.collection("tests").document(TEST_IDs.get(NumOfTest)).collection("MCQuestions")
+//                        .document(MC_IDs.get(i)).update(Answers);
+
+                    firestore.collection("TestWorksheet").document(TEST_IDs.get(NumOfTest))
+                            .collection("userWorksheets").document("worksheet"+String.valueOf(NumOfWorksheet + 1))
+                            .collection("MCQuestions").document("question"+String.valueOf(j + 1))
+                            .set(Answers);
+
+                }
+            }
+
+
+        }
+
     }
 }

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -57,6 +58,8 @@ public class UserProfileActivity extends AppCompatActivity {
         keep_going = findViewById(R.id.keep_going);
 
         firestore = FirebaseFirestore.getInstance();
+
+
 
 
         firebaseAuth = FirebaseAuth.getInstance();
