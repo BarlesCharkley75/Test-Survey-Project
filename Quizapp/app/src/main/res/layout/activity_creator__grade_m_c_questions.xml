@@ -6,4 +6,209 @@
     android:layout_height="match_parent"
     tools:context=".Creator_GradeMCQuestionsActivity">
 
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@color/light_grey">
+
+        <TextView
+            android:id="@+id/question_num"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="question 1"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginTop="15dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:height="170dp"
+            android:background="@color/light_grey"
+            android:gravity="center"
+            android:text="question"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            >
+
+        </TextView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:background="@color/white">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <Button
+                        android:id="@+id/option1"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="40dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:text="option 1"
+                        android:backgroundTint="@color/light_grey"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"></Button>
+                    <Button
+                        android:id="@+id/option2"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="22dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:text="option 2"
+                        android:backgroundTint="@color/light_grey"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"></Button>
+                    <Button
+                        android:id="@+id/option3"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="22dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:text="option 3"
+                        android:backgroundTint="@color/light_grey"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"></Button>
+
+                    <Button
+                        android:id="@+id/option4"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="22dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:text="option 4"
+                        android:backgroundTint="@color/light_grey"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"></Button>
+
+                    <TextView
+                        android:id="@+id/correct_answer"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="50dp"
+                        android:text="correct answer"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="30sp">
+
+                    </TextView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:orientation="horizontal"
+                        android:gravity="right">
+
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/points_get"
+                            android:layout_width="70dp"
+                            android:layout_height="match_parent"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            app:boxStrokeColor="@color/deep_blue">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:hint="0"
+                                android:textSize="20sp"
+                                >
+
+
+                            </com.google.android.material.textfield.TextInputEditText>
+
+
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+
+                        <TextView
+                            android:id="@+id/points_total"
+                            android:layout_width="70dp"
+                            android:layout_height="match_parent"
+                            android:text="/0"
+                            android:textAlignment="center"
+                            android:textSize="40sp">
+
+                        </TextView>
+
+
+
+
+
+
+                    </LinearLayout>
+
+
+
+
+
+
+                </LinearLayout>
+
+            </ScrollView>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/switchView"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            >
+
+            <Button
+                android:id="@+id/GoNext"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:backgroundTint="@color/deep_blue"
+                android:text="NEXT"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:layout_alignParentRight="true"
+                ></Button>
+
+            <Button
+                android:id="@+id/GoPrev"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:backgroundTint="@color/deep_blue"
+                android:text="PREV"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:layout_alignParentLeft="true"
+                ></Button>
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
