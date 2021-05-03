@@ -57,6 +57,37 @@ public class Creator_CategoryActivity extends AppCompatActivity {
         });
 
 
+        survey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Creator_CategoryActivity.this,Creator_SurveyListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        survey.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                AlertDialog alertDialog = new AlertDialog.Builder(Creator_CategoryActivity.this)
+                        .setTitle("Summary")
+                        .setMessage("Do you want to see the survey result instead of edit them?")
+                        .setPositiveButton("Grade", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(Creator_CategoryActivity.this, Creator_GradeSurveyListActivity.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("Cancel",null)
+                        .create();
+
+
+                alertDialog.show();
+                return true;
+            }
+        });
+
+
     }
 
 

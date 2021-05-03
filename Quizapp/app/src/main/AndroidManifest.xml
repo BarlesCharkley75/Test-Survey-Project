@@ -11,7 +11,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Quizapp">
-        <activity android:name=".FinalScoreActivity"></activity>
+        <activity android:name=".Creator_Survey_RankingQuestionsListActivity"
+            android:parentActivityName=".Creator_Survey_CreateQuestionsActivity"></activity>
+        <activity android:name=".Creator_Survey_MatchingQuestionsListActivity"
+            android:parentActivityName=".Creator_Survey_CreateQuestionsActivity"/>
+        <activity android:name=".Creator_Survey_FRQuestionsListActivity"
+            android:parentActivityName=".Creator_Survey_CreateQuestionsActivity"/>
+        <activity android:name=".Creator_Survey_MCQuestionsListActivity"
+            android:parentActivityName=".Creator_Survey_CreateQuestionsActivity"/>
+        <activity android:name=".Creator_Survey_CreateQuestionsActivity"
+            android:parentActivityName=".Creator_SurveyListActivity"/>
+        <activity android:name=".Creator_GradeSurveyListActivity"
+            android:parentActivityName=".Creator_CategoryActivity"/>
+        <activity android:name=".Creator_SurveyListActivity"
+            android:parentActivityName=".Creator_CategoryActivity"/>
+        <activity android:name=".FinalScoreActivity" />
         <activity android:name=".Test_WorksheetListActivity" />
         <activity
             android:name=".Creator_GradeRankingQuestionsActivity"
