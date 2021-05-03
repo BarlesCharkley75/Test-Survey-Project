@@ -11,7 +11,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,12 +21,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static com.example.quizapp.CreatorSurvey_CreateQuestionsActivity.CurrentNumOfSurvey;
-import static com.example.quizapp.CreatorSurvey_MCQuestionsListActivity.MC_id_list;
 import static com.example.quizapp.Creator_SurveyListActivity.survey_id_list;
+import static com.example.quizapp.Creator_TestListActivity.test_id_list;
 
 public class Creator_SurveyListAdapter extends BaseAdapter {
-
 
     private ArrayList<String> surveyList;
 
@@ -38,7 +35,6 @@ public class Creator_SurveyListAdapter extends BaseAdapter {
     public Creator_SurveyListAdapter(ArrayList<String> surveyList) {
         this.surveyList = surveyList;
     }
-
 
     @Override
     public int getCount() {
@@ -71,7 +67,7 @@ public class Creator_SurveyListAdapter extends BaseAdapter {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent( parent.getContext(), CreatorSurvey_CreateQuestionsActivity.class);
+                Intent intent = new Intent( parent.getContext(), Creator_Survey_CreateQuestionsActivity.class);
 //                intent.putExtra("info",1);
                 intent.putExtra("NAME", position);
                 parent.getContext().startActivity(intent);

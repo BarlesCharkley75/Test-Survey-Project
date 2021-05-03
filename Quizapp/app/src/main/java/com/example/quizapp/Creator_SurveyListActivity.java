@@ -2,12 +2,10 @@ package com.example.quizapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.ArrayMap;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +23,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Map;
 
-
+import static com.example.quizapp.Creator_TestListActivity.test_id_list;
 import static com.example.quizapp.UserProfileActivity.surveyList;
+import static com.example.quizapp.UserProfileActivity.testList;
 
 public class Creator_SurveyListActivity extends AppCompatActivity {
 
@@ -37,25 +36,22 @@ public class Creator_SurveyListActivity extends AppCompatActivity {
 
     private int count, next;
 
-    public static ArrayList<String> survey_id_list;
+    public static ArrayList<String> survey_id_list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_creator__test_list);
+        setContentView(R.layout.activity_creator__survey_list);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("List of Surveys");
 
-
-
-
-        creator_survey_list_gridview = findViewById(R.id.creator_test_lists_gridview);
+        creator_survey_list_gridview = findViewById(R.id.creator_survey_lists_gridview);
 
 
 
         firestore = FirebaseFirestore.getInstance();
-        AddNewSurvey = findViewById(R.id.AddTestButton);
+        AddNewSurvey = findViewById(R.id.AddSurveyButton);
 
         loading = new Dialog(Creator_SurveyListActivity.this);
         loading.setContentView(R.layout.loading);
@@ -65,10 +61,6 @@ public class Creator_SurveyListActivity extends AppCompatActivity {
         loading.show();
 
         loadData();
-
-
-
-
 
 
         AddNewSurvey.setOnClickListener(new View.OnClickListener() {
@@ -81,11 +73,10 @@ public class Creator_SurveyListActivity extends AppCompatActivity {
 
     }
 
-
     private void loadData(){
         surveyList.clear();
-        survey_id_list = new ArrayList<>();
-        firestore.collection("survey").document("surveyList").
+        survey_id_list.clear();
+        firestore.collection("surveys").document("surveyList").
                 get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -97,7 +88,7 @@ public class Creator_SurveyListActivity extends AppCompatActivity {
                         next = Integer.valueOf(doc.getString("NEXT"));
 
                         for(int i = 1; i <= count; i ++){
-//                            String SurveyName = doc.getString("survey" + String.valueOf(i)+"_name");
+//                            String testName = doc.getString("test" + String.valueOf(i)+"_name");
                             String surveyName = "survey" + String.valueOf(i);
                             surveyList.add(surveyName);
 
@@ -106,7 +97,7 @@ public class Creator_SurveyListActivity extends AppCompatActivity {
 
                         }
 
-                        //Refer to SurveyListActivity to see how to set up the grid view adapter.
+                        //Refer to TestListActivity to see how to set up the grid view adapter.
                         Creator_SurveyListAdapter adapter = new Creator_SurveyListAdapter(surveyList);
                         creator_survey_list_gridview.setAdapter(adapter);
 
@@ -114,7 +105,7 @@ public class Creator_SurveyListActivity extends AppCompatActivity {
                     }
                     else{
                         loading.cancel();
-                        Toast.makeText(Creator_SurveyListActivity.this, "No surveys yet",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Creator_SurveyListActivity.this, "No survey yet",Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 }
@@ -126,7 +117,6 @@ public class Creator_SurveyListActivity extends AppCompatActivity {
         });
     }
 
-
     private void addNewSurvey(){
         Map<String,Object> surveyData = new ArrayMap<>();
 
@@ -134,22 +124,22 @@ public class Creator_SurveyListActivity extends AppCompatActivity {
 
 
 
-//      update the database to add a new survey.
+//      update the database to add a new test.
         String doc_id = "survey" + String.valueOf(next);
 
-        firestore.collection("survey").document(doc_id)
+        firestore.collection("surveys").document(doc_id)
                 .set(surveyData).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
 
-                Map<String , Object> testDoc = new ArrayMap<>();
+                Map<String , Object> surveyDoc = new ArrayMap<>();
 
-                testDoc.put("survey" + String.valueOf(count + 1)+"_id", "survey" + String.valueOf(next));
-                testDoc.put("count", String.valueOf(surveyList.size() + 1));
-                testDoc.put("NEXT", String.valueOf(next + 1));
+                surveyDoc.put("survey" + String.valueOf(count + 1)+"_id", "survey" + String.valueOf(next));
+                surveyDoc.put("count", String.valueOf(surveyList.size() + 1));
+                surveyDoc.put("NEXT", String.valueOf(next + 1));
 
                 firestore.collection("surveys").document("surveyList")
-                        .update(testDoc).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        .update(surveyDoc).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
 
@@ -230,11 +220,35 @@ public class Creator_SurveyListActivity extends AppCompatActivity {
     }
 
     private void createQuestions(){
-        Intent intent = new Intent(Creator_SurveyListActivity.this,Creator_CreateQuestionsActivity.class);
+        Intent intent = new Intent(Creator_SurveyListActivity.this,Creator_Survey_CreateQuestionsActivity.class);
         intent.putExtra("NAME",-10);
         startActivity(intent);
+
+
+        createNewWorksheet();
     }
 
+    private void createNewWorksheet(){
 
+        Map<String, Object> name = new ArrayMap<>();
+
+        name.put("name", "survey" + String.valueOf(next));
+
+        firestore.collection("SurveyWorksheet").document("survey"+String.valueOf(next))
+                .set(name);
+
+
+
+        Map<String, Object> worksheetListData = new ArrayMap<>();
+
+        worksheetListData.put("count","0");
+        worksheetListData.put("NEXT","1");
+
+        firestore.collection("SurveyWorksheet").document("survey"+String.valueOf(next))
+                .collection("userWorksheets").document("worksheetList").set(worksheetListData);
+
+
+
+    }
 
 }

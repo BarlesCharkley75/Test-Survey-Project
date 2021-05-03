@@ -49,7 +49,7 @@ public class MatchingQurestionActivity extends AppCompatActivity implements View
     private int info = 0;
 
     private int pair_order = 0;
-    private int correct_match;
+
 
     private FirebaseFirestore firestore;
     

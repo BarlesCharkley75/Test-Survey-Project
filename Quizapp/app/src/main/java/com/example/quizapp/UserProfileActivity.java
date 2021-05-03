@@ -40,6 +40,9 @@ public class UserProfileActivity extends AppCompatActivity {
     public static ArrayList<String> testList = new ArrayList<>();
     public static ArrayList<String> TEST_IDs;
 
+    public static ArrayList<String> surveyList = new ArrayList<>();
+    public static ArrayList<String> SURVEY_IDs = new ArrayList<>();
+
     private FirebaseFirestore firestore;
 
     private Dialog loading;
@@ -140,8 +143,10 @@ public class UserProfileActivity extends AppCompatActivity {
                             TEST_IDs.add(doc.getString("test"+String.valueOf(i)+"_id"));
 
                         }
-                        loading.cancel();
-                        Toast.makeText(UserProfileActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
+
+                        loadData2();
+//                        loading.cancel();
+//                        Toast.makeText(UserProfileActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
                     }
                     else{
                         loading.cancel();
@@ -155,5 +160,47 @@ public class UserProfileActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+
     }
+
+    private void loadData2(){
+        surveyList.clear();
+        SURVEY_IDs.clear();
+        firestore.collection("surveys").document("surveyList").
+                get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        int count = Integer.valueOf(doc.getString("count"));
+
+                        for(int i = 1; i <= count; i ++){
+//                            String testName = doc.getString("test" + String.valueOf(i)+"_name");
+                            String testName = "survey"+String.valueOf(i);
+                            surveyList.add(testName);
+
+                            SURVEY_IDs.add(doc.getString("survey"+String.valueOf(i)+"_id"));
+
+                        }
+
+                        loading.cancel();
+                        Toast.makeText(UserProfileActivity.this, "Finished fetching data",Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        loading.cancel();
+                        Toast.makeText(UserProfileActivity.this, "No survey yet",Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }
+                else{
+                    loading.cancel();
+                    Toast.makeText(UserProfileActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
 }
