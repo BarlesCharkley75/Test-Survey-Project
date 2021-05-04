@@ -11,20 +11,38 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Quizapp">
-        <activity android:name=".Creator_Survey_RankingQuestionsListActivity"
-            android:parentActivityName=".Creator_Survey_CreateQuestionsActivity"></activity>
-        <activity android:name=".Creator_Survey_MatchingQuestionsListActivity"
-            android:parentActivityName=".Creator_Survey_CreateQuestionsActivity"/>
-        <activity android:name=".Creator_Survey_FRQuestionsListActivity"
-            android:parentActivityName=".Creator_Survey_CreateQuestionsActivity"/>
-        <activity android:name=".Creator_Survey_MCQuestionsListActivity"
-            android:parentActivityName=".Creator_Survey_CreateQuestionsActivity"/>
-        <activity android:name=".Creator_Survey_CreateQuestionsActivity"
-            android:parentActivityName=".Creator_SurveyListActivity"/>
-        <activity android:name=".Creator_GradeSurveyListActivity"
-            android:parentActivityName=".Creator_CategoryActivity"/>
-        <activity android:name=".Creator_SurveyListActivity"
-            android:parentActivityName=".Creator_CategoryActivity"/>
+        <activity android:name=".Creator_Survey_CreateRankingQuestionActivity"
+            android:windowSoftInputMode="adjustPan" ></activity>
+        <activity
+            android:name=".Creator_Survey_CreateMatchingQuestionActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".Creator_Survey_CreateFRQuestionActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".Creator_Survey_CreateMCQuestionActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".Creator_Survey_RankingQuestionsListActivity"
+            android:parentActivityName=".Creator_Survey_CreateQuestionsActivity" />
+        <activity
+            android:name=".Creator_Survey_MatchingQuestionsListActivity"
+            android:parentActivityName=".Creator_Survey_CreateQuestionsActivity" />
+        <activity
+            android:name=".Creator_Survey_FRQuestionsListActivity"
+            android:parentActivityName=".Creator_Survey_CreateQuestionsActivity" />
+        <activity
+            android:name=".Creator_Survey_MCQuestionsListActivity"
+            android:parentActivityName=".Creator_Survey_CreateQuestionsActivity" />
+        <activity
+            android:name=".Creator_Survey_CreateQuestionsActivity"
+            android:parentActivityName=".Creator_SurveyListActivity" />
+        <activity
+            android:name=".Creator_GradeSurveyListActivity"
+            android:parentActivityName=".Creator_CategoryActivity" />
+        <activity
+            android:name=".Creator_SurveyListActivity"
+            android:parentActivityName=".Creator_CategoryActivity" />
         <activity android:name=".FinalScoreActivity" />
         <activity android:name=".Test_WorksheetListActivity" />
         <activity
