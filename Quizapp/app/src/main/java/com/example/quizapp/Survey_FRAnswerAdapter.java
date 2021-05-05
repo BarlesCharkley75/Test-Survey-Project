@@ -10,11 +10,12 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class Creator_GradeSurveyListAdapter extends BaseAdapter {
+public class Survey_FRAnswerAdapter extends BaseAdapter {
+
     private ArrayList<String> List;
 
-    public Creator_GradeSurveyListAdapter(ArrayList<String> list) {
-        this.List = list;
+    public Survey_FRAnswerAdapter(ArrayList<String> list) {
+        List = list;
     }
 
     @Override
@@ -46,7 +47,7 @@ public class Creator_GradeSurveyListAdapter extends BaseAdapter {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent( parent.getContext(), Creator_Survey_GradeMCQuestionsActivity.class);
+                Intent intent = new Intent( parent.getContext(), Survey_ViewAnswerActivity.class);
                 intent.putExtra("info",1);
                 intent.putExtra("NAME", position );
                 parent.getContext().startActivity(intent);
