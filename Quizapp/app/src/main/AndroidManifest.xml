@@ -11,8 +11,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Quizapp">
-        <activity android:name=".Creator_Survey_CreateRankingQuestionActivity"
-            android:windowSoftInputMode="adjustPan" ></activity>
+        <activity android:name=".Survey_SubmissionActivity"></activity>
+        <activity android:name=".Survey_RankingQuestionActivity" />
+        <activity android:name=".Survey_MatchingQuestionActivity" />
+        <activity android:name=".Survey_FRQuestionActivity" />
+        <activity android:name=".Survey_MCQuestionActivity" />
+        <activity
+            android:name=".SurveyListActivity"
+            android:parentActivityName=".CategoryActivity" />
+        <activity
+            android:name=".Creator_Survey_CreateRankingQuestionActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Creator_Survey_CreateMatchingQuestionActivity"
             android:windowSoftInputMode="adjustPan" />
