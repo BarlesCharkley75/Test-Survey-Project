@@ -60,7 +60,8 @@
             android:name=".Creator_SurveyListActivity"
             android:parentActivityName=".Creator_CategoryActivity" />
         <activity android:name=".FinalScoreActivity" />
-        <activity android:name=".Test_WorksheetListActivity" />
+        <activity android:name=".Test_WorksheetListActivity"
+            android:parentActivityName=".Creator_GradeTestListActivity" />
         <activity
             android:name=".Creator_GradeRankingQuestionsActivity"
             android:windowSoftInputMode="adjustPan" />

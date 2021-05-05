@@ -167,6 +167,7 @@ public class Creator_CreateMCQuestionActivity extends AppCompatActivity {
                     questionData.put("option3", option3.getEditText().getText().toString());
                     questionData.put("option4", option4.getEditText().getText().toString());
                     questionData.put("CorrectAnswer", Answer.getEditText().getText().toString());
+                    questionData.put("Points",points.getEditText().getText().toString());
 
 
                     firestore.collection("tests").document(test_id_list.get(CurrentNumOfTest))

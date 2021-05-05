@@ -301,6 +301,10 @@ public class Creator_GradeFRQuestionsActivity extends AppCompatActivity implemen
 //            question.setText(String.valueOf(MC_points_get.get(0))+" "+String.valueOf(MC_points_get.get(1))+ " "
 //            + String.valueOf(MC_points_total));
 
+            for (int i = questionList.size(); i < FR_points_get.size();i++){
+                FR_points_get.set(i,0);
+            }
+
 //             go to free response activity
             Intent intent = new Intent(Creator_GradeFRQuestionsActivity.this, Creator_GradeMatchingQuestionsActivity.class);
             intent.putExtra("info",1);

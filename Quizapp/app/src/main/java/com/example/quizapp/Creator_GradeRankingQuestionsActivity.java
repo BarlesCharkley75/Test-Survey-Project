@@ -351,6 +351,11 @@ public class Creator_GradeRankingQuestionsActivity extends AppCompatActivity imp
 //            question.setText(String.valueOf(MC_points_get.get(0))+" "+String.valueOf(MC_points_get.get(1))+ " "
 //            + String.valueOf(MC_points_total));
 
+
+            for (int i = questionList.size(); i < RANKING_points_get.size();i++){
+                RANKING_points_get.set(i,0);
+            }
+
 //             go to free response activity
             Intent intent = new Intent(Creator_GradeRankingQuestionsActivity.this, FinalScoreActivity.class);
             intent.putExtra("info",1);
