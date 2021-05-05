@@ -239,13 +239,27 @@ public class Creator_SurveyListActivity extends AppCompatActivity {
 
 
 
-        Map<String, Object> worksheetListData = new ArrayMap<>();
 
-        worksheetListData.put("count","0");
-        worksheetListData.put("NEXT","1");
 
-        firestore.collection("SurveyWorksheet").document("survey"+String.valueOf(next))
-                .collection("userWorksheets").document("worksheetList").set(worksheetListData);
+        Map<String, Object> survey_questionSetData = new ArrayMap<>();
+        survey_questionSetData.put("count","0");
+
+
+//        firestore.collection("SurveyWorksheet").document("survey"+String.valueOf(next))
+//                .collection("userWorksheets").document("worksheetList").set(worksheetListData);
+
+        firestore.collection("SurveyWorksheet").document("survey"+String.valueOf(next)).collection("MCQuestions")
+                .document("questionList").set(survey_questionSetData);
+
+        firestore.collection("SurveyWorksheet").document("survey"+String.valueOf(next)).collection("FRQuestions")
+                .document("questionList").set(survey_questionSetData);
+
+        firestore.collection("SurveyWorksheet").document("survey"+String.valueOf(next)).collection("MatchingQuestions")
+                .document("questionList").set(survey_questionSetData);
+
+        firestore.collection("SurveyWorksheet").document("survey"+String.valueOf(next)).collection("RankingQuestions")
+                .document("questionList").set(survey_questionSetData);
+
 
 
 

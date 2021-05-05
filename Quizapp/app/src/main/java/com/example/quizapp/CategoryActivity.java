@@ -34,6 +34,16 @@ public class CategoryActivity extends AppCompatActivity {
             }
         });
 
+        button_survey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CategoryActivity.this, SurveyListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+
 
     };
 

@@ -9,6 +9,8 @@ import android.widget.Button;
 
 import static com.example.quizapp.FRQuestionActivity.FR_Answers;
 import static com.example.quizapp.MCQuestionActivity2.MC_selected;
+import static com.example.quizapp.MatchingQurestionActivity.MATCHING_Answers;
+import static com.example.quizapp.RankingQuestionActivity.RANKING_Answers;
 
 public class SubmissionActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -26,8 +28,10 @@ public class SubmissionActivity extends AppCompatActivity implements View.OnClic
         submisison.setOnClickListener(this);
         GoPrev.setOnClickListener(this);
 
-        MC_selected.clear();
-        FR_Answers.clear();
+//        MC_selected.clear();
+//        FR_Answers.clear();
+//        MATCHING_Answers.clear();
+//        RANKING_Answers.clear();
     }
 
     @Override
