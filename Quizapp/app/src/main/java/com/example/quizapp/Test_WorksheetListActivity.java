@@ -63,6 +63,8 @@ public class Test_WorksheetListActivity extends AppCompatActivity {
                     if(doc.exists()){
                         int count = Integer.valueOf(doc.getString("count"));
 
+                        grader_worksheet_names.clear();
+
                         for(int i = 1; i <= count; i++){
                             grader_worksheet_names.add(doc.getString("worksheet"+String.valueOf(i)+"_name"));
                         }

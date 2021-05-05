@@ -144,6 +144,7 @@ public class Creator_CreateFRQuestionActivity extends AppCompatActivity {
                     Map<String,Object> questionData = new ArrayMap<>();
 
                     questionData.put("question", question.getText().toString());
+                    questionData.put("Points",points.getEditText().getText().toString());
 
                     String limit = word_limit.getEditText().getText().toString();
                     if(limit.equals("")){
