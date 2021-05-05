@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Creator_Survey_GradeRankingQuestionsActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@color/light_grey">
+
+
+
+
+        <TextView
+            android:id="@+id/question_num"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="question 1"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginTop="15dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:height="170dp"
+            android:background="@color/light_grey"
+            android:gravity="center"
+            android:text="question"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            >
+
+        </TextView>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:background="@color/white">
+
+
+
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="380dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:background="@color/white">
+
+
+
+                        <LinearLayout
+                            android:layout_width="280dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+
+
+
+
+                            <Button
+                                android:id="@+id/option1"
+                                android:layout_width="match_parent"
+                                android:layout_height="60dp"
+                                android:text="left 1"
+                                android:textSize="20dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:textColor="@color/black"
+                                android:backgroundTint="@color/light_grey"
+                                android:layout_marginTop="20dp">
+
+                            </Button>
+
+                            <Button
+                                android:id="@+id/option2"
+                                android:layout_width="match_parent"
+                                android:layout_height="60dp"
+                                android:text="left 2"
+                                android:textSize="20dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:textColor="@color/black"
+                                android:backgroundTint="@color/light_grey"
+                                android:layout_marginTop="20dp">
+
+                            </Button>
+
+                            <Button
+                                android:id="@+id/option3"
+                                android:layout_width="match_parent"
+                                android:layout_height="60dp"
+                                android:text="left 3"
+                                android:textSize="20dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:textColor="@color/black"
+                                android:backgroundTint="@color/light_grey"
+                                android:layout_marginTop="20dp">
+
+                            </Button>
+
+                            <Button
+                                android:id="@+id/option4"
+                                android:layout_width="match_parent"
+                                android:layout_height="60dp"
+                                android:text="left 4"
+                                android:textSize="20dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:textColor="@color/black"
+                                android:backgroundTint="@color/light_grey"
+                                android:layout_marginTop="20dp">
+
+                            </Button>
+
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+
+
+                            <TextView
+                                android:id="@+id/input1"
+                                android:layout_width="match_parent"
+                                android:layout_height="55dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginTop="30dp"
+                                android:text="0"
+                                android:textAlignment="center"
+                                android:textSize="30sp">
+
+                            </TextView>
+                            <TextView
+                                android:id="@+id/input2"
+                                android:layout_width="match_parent"
+                                android:layout_height="55dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginTop="30dp"
+                                android:text="0"
+                                android:textAlignment="center"
+                                android:textSize="30sp">
+
+                            </TextView>
+                            <TextView
+                                android:id="@+id/input3"
+                                android:layout_width="match_parent"
+                                android:layout_height="55dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginTop="20dp"
+                                android:text="0"
+                                android:textAlignment="center"
+                                android:textSize="30sp">
+
+                            </TextView>
+                            <TextView
+
+                                android:id="@+id/input4"
+                                android:layout_width="match_parent"
+                                android:layout_height="55dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginTop="30dp"
+                                android:text="0"
+                                android:textAlignment="center"
+                                android:textSize="30sp">
+
+                            </TextView>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/option1_1_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="80dp"
+                        android:text="1-1 percentage:"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:textAlignment="center">
+
+                    </TextView>
+                    <TextView
+                        android:id="@+id/option1_2_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="20dp"
+                        android:text="1-2 percentage"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:textAlignment="center">
+
+                    </TextView>
+                    <TextView
+                        android:id="@+id/option1_3_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="20dp"
+                        android:text="1-3 percentage"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:textAlignment="center">
+
+                    </TextView>
+                    <TextView
+                        android:id="@+id/option1_4_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="20dp"
+                        android:text="1-4 percentage"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:textAlignment="center">
+
+                    </TextView>
+
+
+
+
+                    <TextView
+                        android:id="@+id/option2_1_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="80dp"
+                        android:text="2-1 percentage:"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:textAlignment="center">
+
+                    </TextView>
+                    <TextView
+                        android:id="@+id/option2_2_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="20dp"
+                        android:text="2-2 percentage"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:textAlignment="center">
+
+                    </TextView>
+                    <TextView
+                        android:id="@+id/option2_3_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="20dp"
+                        android:text="2-3 percentage"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:textAlignment="center">
+
+                    </TextView>
+                    <TextView
+                        android:id="@+id/option2_4_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="20dp"
+                        android:text="2-4 percentage"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:textAlignment="center">
+
+                    </TextView>
+
+
+
+
+
+                    <TextView
+                        android:id="@+id/option3_1_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="80dp"
+                        android:text="3-1 percentage:"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:textAlignment="center">
+
+                    </TextView>
+                    <TextView
+                        android:id="@+id/option3_2_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="20dp"
+                        android:text="3-2 percentage"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:textAlignment="center">
+
+                    </TextView>
+                    <TextView
+                        android:id="@+id/option3_3_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="20dp"
+                        android:text="3-3 percentage"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:textAlignment="center">
+
+                    </TextView>
+                    <TextView
+                        android:id="@+id/option3_4_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="20dp"
+                        android:text="3-4 percentage"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:textAlignment="center">
+
+                    </TextView>
+
+
+
+
+
+                    <TextView
+                        android:id="@+id/option4_1_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="80dp"
+                        android:text="4-1 percentage:"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:textAlignment="center">
+
+                    </TextView>
+                    <TextView
+                        android:id="@+id/option4_2_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="20dp"
+                        android:text="4-2 percentage"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:textAlignment="center">
+
+                    </TextView>
+                    <TextView
+                        android:id="@+id/option4_3_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="20dp"
+                        android:text="4-3 percentage"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:textAlignment="center">
+
+                    </TextView>
+                    <TextView
+                        android:id="@+id/option4_4_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:layout_marginTop="20dp"
+                        android:text="4-4 percentage"
+                        android:textSize="30sp"
+                        android:textColor="@color/black"
+                        android:textAlignment="center">
+
+                    </TextView>
+
+                </LinearLayout>
+            </ScrollView>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/switchView"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            >
+
+            <Button
+                android:id="@+id/GoNext"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:backgroundTint="@color/deep_blue"
+                android:text="NEXT"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:layout_alignParentRight="true"
+                ></Button>
+
+            <Button
+                android:id="@+id/GoPrev"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:backgroundTint="@color/deep_blue"
+                android:text="PREV"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:layout_alignParentLeft="true"
+                ></Button>
+
+
+        </RelativeLayout>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
